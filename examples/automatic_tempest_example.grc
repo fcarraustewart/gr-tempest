@@ -545,7 +545,7 @@ blocks:
     bus_structure: null
     coordinate: [944, 338]
     rotation: 0
-    state: true
+    state: enabled
 - name: uhd_usrp_source_0
   id: uhd_usrp_source
   parameters:
