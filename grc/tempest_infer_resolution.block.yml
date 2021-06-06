@@ -1,0 +1,46 @@
+id: tempest_infer_resolution
+label: infer_resolution
+category: '[Tempest]'
+
+templates:
+  imports: import tempest
+  make: tempest.infer_resolution(${update_timer_seconds})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: update_timer_seconds
+  label: Seconds Until Update
+  dtype: int
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: in
+  domain: stream
+  dtype: complex
+outputs:
+- label: refresh_rate
+  domain: message
+  optional: true
+- label: Vvisible
+  domain: message
+  optional: true
+- label: Vblank
+  domain: message
+  optional: true
+- label: Hvisible
+  domain: message
+  optional: true
+- label: Hblank
+  domain: message
+  optional: true
+file_format: 1
