@@ -31,6 +31,8 @@
 #include "fine_sampling_synchronization_impl.h"
 #include <volk/volk.h>
 #include <random>
+#include <gnuradio/fft/fft.h>
+#include <thread>
 
 namespace gr {
     namespace tempest {
@@ -153,12 +155,12 @@ namespace gr {
             d_abs_historic_line_corr =  (float*)volk_malloc((2*d_max_deviation_px + 1)              *sizeof(float),     volk_get_alignment() / sizeof(float));
             d_abs_historic_frame_corr = (float*)volk_malloc((2*(d_max_deviation_px+1)*d_Vtotal + 1) *sizeof(float),     volk_get_alignment() / sizeof(float));
 
-            memset(&d_current_line_corr[0],         0,  2*d_max_deviation_px+1);
-            memset(&d_historic_line_corr[0],        0,  2*d_max_deviation_px+1);
-            memset(&d_abs_historic_line_corr[0],    0,  2*d_max_deviation_px+1);
-            memset(&d_current_frame_corr[0],        0,  2*d_max_deviation_px*d_Vtotal+1);
-            memset(&d_historic_frame_corr[0],       0,  2*d_max_deviation_px*d_Vtotal+1);
-            memset(&d_abs_historic_frame_corr[0],   0,  2*d_max_deviation_px*d_Vtotal+1);
+            memset(&d_current_line_corr[0],         0,  sizeof(gr_complex)*(2*d_max_deviation_px+1));
+            memset(&d_historic_line_corr[0],        0,  sizeof(gr_complex)*(2*d_max_deviation_px+1));
+            memset(&d_abs_historic_line_corr[0],    0,  sizeof(float)*(2*d_max_deviation_px+1));
+            memset(&d_current_frame_corr[0],        0,  sizeof(gr_complex)*(2*d_max_deviation_px*d_Vtotal+1));
+            memset(&d_historic_frame_corr[0],       0,  sizeof(gr_complex)*(2*d_max_deviation_px*d_Vtotal+1));
+            memset(&d_abs_historic_frame_corr[0],   0,  sizeof(float)*(2*d_max_deviation_px*d_Vtotal+1));
 
 
             printf("[TEMPEST] Setting Htotal to %i and Vtotal to %i in fine sampling synchronization block.\n", Htotal, Vtotal);
@@ -277,17 +279,78 @@ namespace gr {
                         d_next_update = d_dist(d_gen);
                     }
                 }*/
-                int required_for_interpolation = noutput_items; 
+                int required_for_interpolation = noutput_items;
+#define AUTOCORRELATION_ 1                 
+#if AUTOCORRELATION_ == 1
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define FFT_ true
+#define IFFT_ false
+                uint32_t fft_size = ceil(noutput_items/1.0);
+
+                gr_complex* d_buffer1_ = (gr_complex*)volk_malloc(fft_size*sizeof(gr_complex), volk_get_alignment() / sizeof(gr_complex));
+                float* magnitude_squared_float = (float*)volk_malloc(fft_size*sizeof(float), volk_get_alignment() / sizeof(float));
+
+                memset(&d_buffer1_[0],                      0,   fft_size*sizeof(gr_complex));
+                memset(&magnitude_squared_float[0],         0,   fft_size*sizeof(float));
+
+                //out = Autocorrelation of in 
+                //  Using
+                //  Wiener-Khintchine Theorem http://sfprime.net/lls/pcs.htm
+                // TODO: Check if our signal can verify hipothesis> Real signal.
+                //1. FFT
+                gr::fft::fft_complex* fft = new gr::fft::fft_complex(   fft_size, FFT_, 1   );
+                memcpy( fft->get_inbuf(), in, fft->inbuf_length()*sizeof(gr_complex) );
+                fft->execute();
+                //2. ABS or MAGNITUDE^2
+                volk_32fc_magnitude_squared_32f(&magnitude_squared_float[0], &fft->get_outbuf()[0], fft_size);
+
+                delete(fft); // We used fft, now Destroy fft object.
+
+                // FLOAT OR REAL TO COMPLEX BEFORE IFFT
+                //
+                for (unsigned int i = 0; i < fft_size; i++) // float to complex conversion
+                    d_buffer1_[i] = magnitude_squared_float[i];
+
+
+                //3. IFFT
+                gr::fft::fft_complex* ifft = new gr::fft::fft_complex(   fft_size, IFFT_, 1   );
+                memcpy( ifft->get_inbuf(), d_buffer1_, ifft->inbuf_length()*sizeof(gr_complex) );
+                ifft->execute();
                 
+
+                //OUTPUT TO SEE LIVE IN A QT GUI Time Sink gr-block
+                unsigned int i=0;
+                    memcpy(&out[i], ifft->get_outbuf(), fft_size*sizeof(gr_complex)   );
+                    i+=ifft->outbuf_length();
+                
+                
+                //KIND OF AN INFER RESOLUTION TEST> CALCULATE PEAK INDEX
+                uint16_t peak_index = 0;
+                for (unsigned int i = 0; i < fft_size; i++) // complex to imag? seems like Imag it's got the real info.
+                    magnitude_squared_float[i] = (ifft->get_outbuf()[i].imag());
+                volk_32f_index_max_16u(    &peak_index, (&magnitude_squared_float[0])   , fft_size  ); 
+                
+                delete(ifft); // We used ifft, now Destroy ifft object.
+
+                for (int i=0;i<=peak_index;i++)
+                    printf("Calculated Peak Index is in \t%d.\r\n", peak_index);
+
+                volk_free(d_buffer1_);
+                volk_free(magnitude_squared_float);
+
+                if (peak_index!=0)
+                    boost::this_thread::sleep(  boost::posix_time::milliseconds(static_cast<long>(1000)) );
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#endif //AUTOCORRELATION_
                 //printf("d_next_update: %i\n",d_next_update);
                 if (d_correct_sampling){
                     d_samp_inc_rem = (1-d_alpha_samp_inc)*d_samp_inc_rem + d_alpha_samp_inc*d_new_interpolation_ratio_rem;
                     // d_samp_inc_rem = d_samp_inc_rem - d_alpha_samp_inc*(d_samp_inc_rem+1 - new_interpolation_ratio);
-                    required_for_interpolation = interpolate_input(&in[0], &out[0], noutput_items);
+                //    required_for_interpolation = interpolate_input(&in[0], &out[0], noutput_items);
                 }
                 else
                 {
-                    memcpy(&out[0], &in[0], noutput_items*sizeof(gr_complex));
+                //    memcpy(&out[0], &in[0], noutput_items*sizeof(gr_complex));
                 }
 
                 //memcpy(out, in, noutput_items*sizeof(gr_complex));
