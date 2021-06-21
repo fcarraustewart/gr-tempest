@@ -161,6 +161,7 @@ namespace gr {
 
       d_work_counter++;                                                           /* Work iteration counter */
       
+
       /////////////////////////////
       //   REFRESH RATE SEARCH   //
       /////////////////////////////
@@ -175,6 +176,7 @@ namespace gr {
 
       d_refresh_rate = (long)fv;                                                  /* Intentar que varíe menos que fv */
    
+
       /////////////////////////////
       //     HEIGHT SEARCH       //
       /////////////////////////////
@@ -187,17 +189,20 @@ namespace gr {
 
       double yt = (double)d_sample_rate / (double)((yt_index+5)*fv);              /* El +5 compensa lo que se movio por el volk */
 
-      d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
-      //d_vtotal_est = std::ceil(dvest);
+      //d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
+      d_vtotal_est = round(yt);
+      
+
+      /////////////////////////////
+      //    UPDATE RESULTS       //
+      /////////////////////////////
 
       if(d_work_counter >= 500)
       {
-        printf("Refresh Rate \t %f \t \t Hz\r Vtotal \t \t \t%f \t Px\r \n ", fv, yt);
-
-        //printf("descartados \t \t %d \r margen \t \t \t %d \r \n ", d_search_skip, d_search_margin);
-
         search_table(fv);
         publish_messages();
+
+        printf("Refresh Rate \t %f \t Hz \t \t Vtotal_inst \t %f \t Px \t\t Vtotal \t %d \t Px \t\t Vvisible \t %ld \t Px \t\t Hvisible \t %ld \t Px \r \n ", fv, yt,d_vtotal_est,d_Vvisible,d_Hvisible);
 
         d_work_counter = 0;
       }
