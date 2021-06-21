@@ -25,7 +25,7 @@ outputs:
 - label: Vvisible
   domain: message
   optional: true
-- label: Vsize
+- label: Vblank
   domain: message
   optional: true
 - label: Hvisible

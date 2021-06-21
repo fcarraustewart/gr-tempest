@@ -115,7 +115,7 @@ namespace gr {
                         pmt::mp("refresh_rate"), 
                         pmt::cons(
                           pmt::mp("refresh_rate"), 
-                          pmt::from_long((long)d_refresh_rate)
+                          pmt::from_long(d_refresh_rate)
                         )
                       );             
         
@@ -123,28 +123,28 @@ namespace gr {
                         pmt::mp("Vvisible"), 
                         pmt::cons(
                           pmt::mp("Vvisible"), 
-                          pmt::from_long((long)d_Vvisible)
+                          pmt::from_long(d_Vvisible)
                         )
                       );             
       message_port_pub(
                         pmt::mp("Vblank"), 
                         pmt::cons(
                           pmt::mp("Vblank"), 
-                          pmt::from_long((long)d_Vblank)
+                          pmt::from_long(d_Vblank)
                         )
                       );
       message_port_pub(
                         pmt::mp("Hvisible"), 
                         pmt::cons(
                           pmt::mp("Hvisible"), 
-                          pmt::from_long((long)d_Hvisible)
+                          pmt::from_long(d_Hvisible)
                         )
                       );     
       message_port_pub(
                         pmt::mp("Hblank"), 
                         pmt::cons(
                           pmt::mp("Hblank"), 
-                          pmt::from_long((long)d_Hblank)
+                          pmt::from_long(d_Hblank)
                         )
                       ); 
     }
@@ -191,7 +191,7 @@ namespace gr {
 
       //d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
       d_vtotal_est = round(yt);
-      
+
 
       /////////////////////////////
       //    UPDATE RESULTS       //
