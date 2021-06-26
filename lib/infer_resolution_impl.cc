@@ -24,6 +24,25 @@
  * Boston, MA 02110-1301, USA.
  *
  */
+/* -*- c++ -*- */
+/*
+ * Copyright 2021 grtempest.
+ *
+ * This is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -40,42 +59,49 @@
 #define MAX_FRAMERATE (85)
 #define MAX_HEIGHT (1500)
 #define lowpasscoeff 0.1
-#define MAX_PERIOD 0.0000264
-
+#define MAX_PERIOD 0.0000284
 namespace gr {
-  namespace tempest {
+  namespace resolution {
 
     infer_resolution::sptr
-    infer_resolution::make(int samp_rate, int fft_size)
+    infer_resolution::make(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode)
     {
       return gnuradio::get_initial_sptr
-        (new infer_resolution_impl(samp_rate, fft_size));
+        (new infer_resolution_impl(sample_rate, size, refresh_rate, Vvisible, Hvisible, automatic_mode));
     }
 
 
     /*
      * The private constructor
      */
-    infer_resolution_impl::infer_resolution_impl(int samp_rate, int fft_size)
+    infer_resolution_impl::infer_resolution_impl(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode)
       : gr::block("infer_resolution",
               gr::io_signature::make(1, 1, sizeof(float)),
               gr::io_signature::make(1, 1, sizeof(float)))
     {
+    
       //Received parameters
-      d_sample_rate = samp_rate;
-      d_fft_size = fft_size;
+      d_sample_rate = sample_rate;
+      d_fft_size = size;
+      
+      d_refresh_rate = refresh_rate;
+      d_Vvisible = Vvisible;
+      d_Hvisible = Hvisible;
+      d_automatic_mode = automatic_mode;
 
       //Search values
-      d_search_skip = 830000;
+      //d_search_skip = 830000;
+      d_search_skip = d_sample_rate/(d_sample_rate+0.2);
       //d_search_skip = d_sample_rate/(MAX_FRAMERATE);
       d_search_margin = 10000;
+      
       //d_search_margin = (d_sample_rate/(MIN_FRAMERATE))-((d_sample_rate)/(MAX_FRAMERATE));
       d_vtotal_est = 0;
       
       //Parameters to publish
       d_refresh_rate = 0;
-      d_Hvisible = 0;
-      d_Vvisible = 0;
+      /*d_Hvisible = 0;
+      d_Vvisible = 0;*/
       d_Hblank = 0;
       d_Vblank = 0;
 
@@ -90,7 +116,7 @@ namespace gr {
       message_port_register_out(pmt::mp("Hblank"));
 
       set_history(d_fft_size);
-          
+    
     }
 
     /*
@@ -100,14 +126,11 @@ namespace gr {
     {
     }
 
-
     void
     infer_resolution_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       ninput_items_required[0] = noutput_items;
     }
-
-
     void
     infer_resolution_impl::publish_messages()
     {
@@ -148,17 +171,16 @@ namespace gr {
                         )
                       ); 
     }
-
-
     int
     infer_resolution_impl::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const float *in = (const float *) input_items[0];
-      float *out = (float *) output_items[0];
+      const float  *in = (const float  *) input_items[0];
+      float  *out = (float  *) output_items[0];
 
+      // Do <+signal processing+>
       d_work_counter++;                                                           /* Work iteration counter */
       
 
@@ -205,8 +227,7 @@ namespace gr {
         printf("Refresh Rate \t %f \t Hz \t \t Vtotal_inst \t %f \t Px \t\t Vtotal \t %d \t Px \t\t Vvisible \t %ld \t Px \t\t Hvisible \t %ld \t Px \r \n ", fv, yt,d_vtotal_est,d_Vvisible,d_Hvisible);
 
         d_work_counter = 0;
-      }
-      
+       } 
       // Tell runtime system how many input items we consumed on
       // each input stream.
       consume_each (noutput_items);
@@ -214,14 +235,33 @@ namespace gr {
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
-
     void
     infer_resolution_impl::search_table(double fv_estimated)
       {
-        if (fv_estimated<67.5)
+        if (fv_estimated<58)
+        {
+          d_refresh_rate=56;
+          if (d_vtotal_est<700 && d_vtotal_est>450)	//not necessary, discard big estimated error
+          {
+            d_Vvisible=600;
+            d_Vblank=25;
+            d_Hvisible=800;
+            d_Hblank=224;
+          }
+        }
+        
+        
+        if (fv_estimated<67.5 && fv_estimated>58)
         {
           d_refresh_rate=60;
-          if(d_vtotal_est<770){
+          if(d_vtotal_est<689){
+            d_Vvisible=600;
+            d_Vblank=28;
+            d_Hvisible=800;
+            d_Hblank=256;
+          }
+          
+          if(d_vtotal_est<770 && d_vtotal_est>689){
             d_Vvisible=720;
             d_Vblank=30;
             d_Hvisible=1280;
@@ -301,7 +341,13 @@ namespace gr {
         }
         if(fv_estimated>72.5 && fv_estimated<80){
           d_refresh_rate=75;
-          if(d_vtotal_est<802.5){
+          if(d_vtotal_est<712.5){
+            d_Hvisible=800;
+            d_Hblank=256;  
+            d_Vvisible=600;
+            d_Vblank=25;  
+          }
+          if(d_vtotal_est<802.5 && d_vtotal_est>712.5){
             d_Hvisible=1024;
             d_Hblank=288;  
             d_Vvisible=768;
@@ -328,7 +374,13 @@ namespace gr {
         }
         if(fv_estimated>80){
           d_refresh_rate=85;
-          if(d_vtotal_est<808.5){
+          if(d_vtotal_est<719.5){
+            d_Hvisible=800;
+            d_Hblank=248;  
+            d_Vvisible=600;
+            d_Vblank=31;  
+          }
+          if(d_vtotal_est<808.5 && d_vtotal_est>719.5){
             d_Hvisible=1024;
             d_Hblank=352;  
             d_Vvisible=768;
@@ -354,7 +406,6 @@ namespace gr {
           }
         }
     }
-
-  } /* namespace tempest */
+  } /* namespace resolution */
 } /* namespace gr */
 
