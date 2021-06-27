@@ -3,14 +3,27 @@ label: infer resolution
 category: '[Tempest]'
 templates:
   imports: import tempest
-  make: tempest.infer_resolution(${samp_rate}, ${fft_size})
+  make: tempest.infer_resolution(${sample_rate}, ${size}, ${refresh_rate}, ${Vvisible},
+    ${Hvisible}, ${automatic_mode})
 parameters:
-- id: samp_rate
-  label: Samp_rate
+- id: sample_rate
+  label: Sample_rate
   dtype: int
-- id: fft_size
-  label: Fft_size
+- id: size
+  label: Size
   dtype: int
+- id: refresh_rate
+  label: Refresh_rate
+  dtype: int
+- id: Vvisible
+  label: Vvisible
+  dtype: int
+- id: Hvisible
+  label: Hvisible
+  dtype: int
+- id: automatic_mode
+  label: Automatic_mode
+  dtype: raw
 inputs:
 - label: in
   domain: stream
@@ -34,4 +47,5 @@ outputs:
 - label: Hblank
   domain: message
   optional: true
+file_format: 1
 file_format: 1

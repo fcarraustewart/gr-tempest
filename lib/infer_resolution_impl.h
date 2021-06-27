@@ -1,12 +1,10 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2021 gr-tempest
- *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
- *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
- *    Victoria Severi   <maria.severi@fing.edu.uy>
- *    
- *    Instituto de Ingeniería Eléctrica, Facultad de Ingeniería,
- *    Universidad de la República, Uruguay.
+ * Copyright 2020
+ *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ *
+ *   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
+ *   Universidad de la Republica, Uruguay.
  *  
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,12 +37,16 @@ namespace gr {
       // Nothing to declare in this block.
 
      public:
-      infer_resolution_impl(int samp_rate, int fft_size);
+      infer_resolution_impl(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode);
       ~infer_resolution_impl();
 
       //Received parameters
       int d_sample_rate;
       int d_fft_size;
+      long d_refresh_rate;
+      long d_Vvisible;
+      long d_Hvisible;
+      bool d_automatic_mode;
 
       //Search values
       uint32_t d_search_skip;
@@ -52,9 +54,9 @@ namespace gr {
       uint32_t d_vtotal_est;
 
       //Results to publish
-      long d_refresh_rate;
+      /*long d_refresh_rate;
       long d_Hvisible;
-      long d_Vvisible;
+      long d_Vvisible;*/
       long d_Hblank;
       long d_Vblank;
 
@@ -64,7 +66,7 @@ namespace gr {
       //Functions
       void publish_messages();
       void search_table(double fv_estimated);
-
+      
       // Where all the action really happens
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 

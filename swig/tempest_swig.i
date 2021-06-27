@@ -33,5 +33,6 @@ GR_SWIG_BLOCK_MAGIC2(tempest, fine_sampling_synchronization);
 GR_SWIG_BLOCK_MAGIC2(tempest, sync_detector);
 %include "tempest/frame_drop.h"
 GR_SWIG_BLOCK_MAGIC2(tempest, frame_drop);
+
 %include "tempest/infer_resolution.h"
 GR_SWIG_BLOCK_MAGIC2(tempest, infer_resolution);

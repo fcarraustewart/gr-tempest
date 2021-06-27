@@ -50,7 +50,7 @@ namespace gr {
        * class. tempest::infer_resolution::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int samp_rate, int fft_size);
+      static sptr make(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode);
     };
 
   } // namespace tempest

@@ -434,7 +434,7 @@ blocks:
     fft_size: int(4096*512)
     maxoutbuf: '0'
     minoutbuf: '0'
-    sample_rate: int(50e6)
+    sample_rate: int(30e6)
   states:
     bus_sink: false
     bus_source: false
@@ -479,7 +479,7 @@ blocks:
     bus_structure: null
     coordinate: [584, 534]
     rotation: 180
-    state: enabled
+    state: disabled
 - name: blocks_delay_0
   id: blocks_delay
   parameters:
@@ -498,7 +498,7 @@ blocks:
     bus_structure: null
     coordinate: [754, 530]
     rotation: 180
-    state: true
+    state: disabled
 - name: blocks_float_to_short_0
   id: blocks_float_to_short
   parameters:
@@ -515,7 +515,7 @@ blocks:
     bus_structure: null
     coordinate: [209, 546]
     rotation: 180
-    state: enabled
+    state: disabled
 - name: blocks_multiply_xx_0
   id: blocks_multiply_xx
   parameters:
@@ -649,7 +649,7 @@ blocks:
     bus_structure: null
     coordinate: [1091, 564]
     rotation: 180
-    state: enabled
+    state: disabled
 - name: tempest_frame_drop_0
   id: tempest_frame_drop
   parameters:
@@ -670,18 +670,18 @@ blocks:
     bus_structure: null
     coordinate: [1320, 382]
     rotation: 270
-    state: enabled
+    state: disabled
 - name: tempest_image_source_0
   id: tempest_image_source
   parameters:
-    Htotal: '1024'
+    Htotal: '1056'
     Hvisible: '800'
-    Vtotal: '624'
+    Vtotal: '628'
     Vvisible: '600'
     affinity: ''
     alias: ''
     comment: ''
-    image_file: /home/pablo/fing/proyecto/grabaciones/prueba2.800x600.jpg
+    image_file: /home/victoria/gr-tempest/Imagen_800_600.png
     maxoutbuf: '0'
     minoutbuf: '0'
     repeatmode: '1'
@@ -695,13 +695,17 @@ blocks:
 - name: tempest_infer_resolution_0
   id: tempest_infer_resolution
   parameters:
+    Hvisible: '600'
+    Vvisible: '800'
     affinity: ''
     alias: ''
+    automatic_mode: '0'
     comment: ''
-    fft_size: int(4096*512)
     maxoutbuf: '0'
     minoutbuf: '0'
-    samp_rate: int(50e6)
+    refresh_rate: '60'
+    sample_rate: int(30e6)
+    size: int(4096*512)
   states:
     bus_sink: false
     bus_source: false
@@ -798,7 +802,7 @@ blocks:
     bus_structure: null
     coordinate: [366, 514]
     rotation: 180
-    state: enabled
+    state: disabled
 - name: tempest_sync_detector_0
   id: tempest_sync_detector
   parameters:
@@ -817,7 +821,7 @@ blocks:
     bus_structure: null
     coordinate: [892, 518]
     rotation: 180
-    state: enabled
+    state: disabled
 - name: video_sdl_sink_0_0_0
   id: video_sdl_sink
   parameters:
@@ -838,7 +842,7 @@ blocks:
     bus_structure: null
     coordinate: [23, 514]
     rotation: 180
-    state: enabled
+    state: disabled
 
 connections:
 - [FFT_autocorrelation_0, '0', tempest_infer_resolution_0, '0']
