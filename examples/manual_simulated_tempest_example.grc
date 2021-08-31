@@ -699,7 +699,7 @@ blocks:
     Vvisible: '800'
     affinity: ''
     alias: ''
-    automatic_mode: '0'
+    automatic_mode: bool(0)
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'

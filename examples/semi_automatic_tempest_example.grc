@@ -447,7 +447,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: int(10e6)
+    value: int(19989200)
   states:
     bus_sink: false
     bus_source: false
@@ -455,6 +455,24 @@ blocks:
     coordinate: [232, 92]
     rotation: 0
     state: enabled
+- name: FFT_autocorrelation_0
+  id: FFT_autocorrelation
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fac_decimation: '10'
+    fft_size: int(4096*512)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sample_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [202, 787]
+    rotation: 0
+    state: disabled
 - name: blocks_complex_to_mag_0
   id: blocks_complex_to_mag
   parameters:
@@ -497,7 +515,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/gnuradio/persistent/30M_tv_g50_v2.dat
+    file: /home/victoria/GNUfiles/grabaciones/test3_19980KHz_1152_864.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -511,7 +529,7 @@ blocks:
     bus_structure: null
     coordinate: [22, 460]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_float_to_short_0_0
   id: blocks_float_to_short
   parameters:
@@ -546,6 +564,23 @@ blocks:
     coordinate: [856, 603]
     rotation: 180
     state: disabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [743, 724]
+    rotation: 0
+    state: disabled
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -564,7 +599,7 @@ blocks:
     bus_structure: null
     coordinate: [272, 465]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: tempest_fine_sampling_synchronization_0
   id: tempest_fine_sampling_synchronization
   parameters:
@@ -603,6 +638,97 @@ blocks:
     bus_structure: null
     coordinate: [1072, 579]
     rotation: 180
+    state: disabled
+- name: tempest_infer_resolution_0
+  id: tempest_infer_resolution
+  parameters:
+    Hvisible: Hvisible
+    Vvisible: Vvisible
+    affinity: ''
+    alias: ''
+    automatic_mode: bool(0)
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    refresh_rate: refresh_rate
+    sample_rate: samp_rate
+    size: int(4096*512)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [479, 733]
+    rotation: 0
+    state: disabled
+- name: tempest_message_to_var_0
+  id: tempest_message_to_var
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    target: refresh_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [764, 780]
+    rotation: 0
+    state: disabled
+- name: tempest_message_to_var_0_0
+  id: tempest_message_to_var
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    target: Vvisible
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [766, 826]
+    rotation: 0
+    state: disabled
+- name: tempest_message_to_var_0_0_0
+  id: tempest_message_to_var
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    target: Vblank
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [765, 872]
+    rotation: 0
+    state: disabled
+- name: tempest_message_to_var_0_0_0_0
+  id: tempest_message_to_var
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    target: Hvisible
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [764, 917]
+    rotation: 0
+    state: disabled
+- name: tempest_message_to_var_0_0_0_0_0
+  id: tempest_message_to_var
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    target: Hblank
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [764, 965]
+    rotation: 0
     state: disabled
 - name: tempest_normalize_flow_0
   id: tempest_normalize_flow
@@ -994,7 +1120,7 @@ blocks:
     bus_structure: null
     coordinate: [148, 607]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: video_sdl_sink_0_0
   id: video_sdl_sink
   parameters:
@@ -1039,14 +1165,22 @@ blocks:
     state: enabled
 
 connections:
+- [FFT_autocorrelation_0, '0', tempest_infer_resolution_0, '0']
 - [blocks_complex_to_mag_0, '0', tempest_normalize_flow_0, '0']
 - [blocks_delay_0, '0', blocks_complex_to_mag_0, '0']
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_float_to_short_0_0, '0', video_sdl_sink_0_0_0, '0']
 - [blocks_float_to_short_0_0_0, '0', video_sdl_sink_0_0, '0']
+- [blocks_throttle_0, '0', FFT_autocorrelation_0, '0']
 - [blocks_throttle_0, '0', tempest_fine_sampling_synchronization_0, '0']
 - [tempest_fine_sampling_synchronization_0, '0', blocks_delay_0, '0']
 - [tempest_framing_0, '0', blocks_float_to_short_0_0_0, '0']
+- [tempest_infer_resolution_0, '0', blocks_null_sink_0, '0']
+- [tempest_infer_resolution_0, Hblank, tempest_message_to_var_0_0_0_0_0, port0]
+- [tempest_infer_resolution_0, Hvisible, tempest_message_to_var_0_0_0_0, port0]
+- [tempest_infer_resolution_0, Vblank, tempest_message_to_var_0_0_0, port0]
+- [tempest_infer_resolution_0, Vvisible, tempest_message_to_var_0_0, port0]
+- [tempest_infer_resolution_0, refresh_rate, tempest_message_to_var_0, port0]
 - [tempest_normalize_flow_0, '0', blocks_float_to_short_0_0, '0']
 - [tempest_normalize_flow_0, '0', tempest_framing_0, '0']
 - [uhd_usrp_source_0, '0', tempest_fine_sampling_synchronization_0, '0']

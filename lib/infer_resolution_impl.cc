@@ -70,7 +70,7 @@ namespace gr {
 
       //Search values
       //d_search_skip = 830000;
-      d_search_skip = d_sample_rate/(d_sample_rate+0.2);
+      d_search_skip = d_sample_rate/(d_refresh_rate+0.2);
       //d_search_skip = d_sample_rate/(MAX_FRAMERATE);
       d_search_margin = 10000;
       
@@ -176,7 +176,7 @@ namespace gr {
 
       double fv = (double)d_sample_rate/(double)peak_index;
 
-      d_refresh_rate = (long)fv;                                                  /* Intentar que varíe menos que fv */
+      d_refresh_rate = (long)fv;                        /* Intentar que varíe menos que fv */
    
 
       /////////////////////////////
@@ -201,10 +201,10 @@ namespace gr {
 
       if(d_work_counter >= 500)
       {
-        search_table(fv);
+        search_table(d_refresh_rate);	//cambie fv por refresh_rate
         publish_messages();
 
-        printf("Refresh Rate \t %f \t Hz \t \t Vtotal_inst \t %f \t Px \t\t Vtotal \t %d \t Px \t\t Vvisible \t %ld \t Px \t\t Hvisible \t %ld \t Px \r \n ", fv, yt,d_vtotal_est,d_Vvisible,d_Hvisible);
+        printf("Refresh Rate \t %f \t Hz \t \t Vtotal_inst \t %f \t Px \t\t Vtotal \t %d \t Px \t\t Vvisible \t %ld \t Px \t\t Hvisible \t %ld \t Px \t Hblank \t %ld \r \n ", fv, yt,d_vtotal_est,d_Vvisible,d_Hvisible, d_Hblank);
 
         d_work_counter = 0;
        } 
@@ -223,6 +223,7 @@ namespace gr {
           d_refresh_rate=56;
           if (d_vtotal_est<700 && d_vtotal_est>450)	//not necessary, discard big estimated error
           {
+          
             d_Vvisible=600;
             d_Vblank=25;
             d_Hvisible=800;
@@ -242,7 +243,7 @@ namespace gr {
           }
           
           if(d_vtotal_est<770 && d_vtotal_est>689){
-            d_Vvisible=720;
+            d_Vvisible=720;		//El blanking no coincide con lo que dice el monitor
             d_Vblank=30;
             d_Hvisible=1280;
             d_Hblank=370;
@@ -254,7 +255,7 @@ namespace gr {
             d_Hvisible=1280;
             d_Hblank=160;
           }
-          if(d_vtotal_est<796.5 &&  d_vtotal_est>792.5){
+          /*if(d_vtotal_est<796.5 &&  d_vtotal_est>792.5){
             d_Hvisible=1360;
             d_Hblank=432;  
             d_Vvisible=768;
@@ -272,20 +273,21 @@ namespace gr {
             d_Hblank=134;  
             d_Vvisible=768;
             d_Vblank=32;            
-          }
-          if(d_vtotal_est<809.5 &&  d_vtotal_est>803){
+          }*/
+          if(d_vtotal_est<869.5 &&  d_vtotal_est>792.5){
+          //ESTA ES UNA DE LAS GRABACIONES Y ESTA BIEN LOS DATOS
             d_Hvisible=1024;
             d_Hblank=320;  
             d_Vvisible=768;
             d_Vblank=38;            
           }
-          if(d_vtotal_est<869.5 &&  d_vtotal_est>809.5){
+          /*if(d_vtotal_est<869.5 &&  d_vtotal_est>809.5){
           //reduced blanking
             d_Hvisible=1360;
             d_Hblank=160;  
             d_Vvisible=768;
             d_Vblank=45;            
-          }
+          }*/
           if(d_vtotal_est<930 &&  d_vtotal_est>869.5){
           //reduced blanking
             d_Hvisible=1440;
@@ -313,39 +315,65 @@ namespace gr {
           }
         } 
         if (fv_estimated>67.5 && fv_estimated<72.5){
+            /*add from xrandr*/
+            d_refresh_rate=70;
+            d_Hvisible=720;
+            d_Hblank=180;  
+            d_Vvisible=400;
+            d_Vblank=49; 
+         
+          /* no esta en las opciones del monitor
           d_refresh_rate=70;
           d_Hvisible=1024;
           d_Hblank=304;  
           d_Vvisible=768;
-          d_Vblank=38;            
+          d_Vblank=38;   */         
         }
+        
+        
         if(fv_estimated>72.5 && fv_estimated<80){
           d_refresh_rate=75;
-          if(d_vtotal_est<712.5){
+          if(d_vtotal_est<562.5){
+          /* add from xrandr*/
+            d_Hvisible=640;
+            d_Hblank=200;  
+            d_Vvisible=480;
+            d_Vblank=20; 
+          if(d_vtotal_est<712.5 && d_vtotal_est>562.5){
+          /*check*/
             d_Hvisible=800;
             d_Hblank=256;  
             d_Vvisible=600;
             d_Vblank=25;  
           }
-          if(d_vtotal_est<802.5 && d_vtotal_est>712.5){
+          if(d_vtotal_est<850 && d_vtotal_est>712.5){
+            /*check*/
             d_Hvisible=1024;
             d_Hblank=288;  
             d_Vvisible=768;
             d_Vblank=32;  
           }
-          if(d_vtotal_est<873.5 &&  d_vtotal_est>802.5){
+          /*if(d_vtotal_est<873.5 &&  d_vtotal_est>802.5){
             d_Hvisible=1280;
             d_Hblank=416;  
             d_Vvisible=768;
-            d_Vblank=37;  
+            d_Vblank=37;  */
           }
-          if(d_vtotal_est<1004 &&  d_vtotal_est>873.5){
-            d_Hvisible=1440;
+          if(d_vtotal_est<983 &&  d_vtotal_est>850){
+            d_Hvisible=1152;
+            d_Hblank=448;  
+            d_Vvisible=864;
+            d_Vblank=36;  
+          }
+          
+          //if(d_vtotal_est<1004 &&  d_vtotal_est>802.5){
+            /*d_Hvisible=1440;
             d_Hblank=496;  
             d_Vvisible=900;
             d_Vblank=42;  
-          }
-          if(d_vtotal_est>1004){
+          }*/
+          if(d_vtotal_est>983){
+            /*check*/
             d_Hvisible=1280;
             d_Hblank=408;  
             d_Vvisible=1024;
@@ -355,7 +383,7 @@ namespace gr {
         if(fv_estimated>80){
           d_refresh_rate=85;
           if(d_vtotal_est<719.5){
-            d_Hvisible=800;
+            d_Hvisible=800;	
             d_Hblank=248;  
             d_Vvisible=600;
             d_Vblank=31;  

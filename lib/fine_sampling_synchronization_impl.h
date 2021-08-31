@@ -65,26 +65,18 @@ namespace gr {
          int d_max_deviation_px; 
       
         // correlation with the last line 
-        /*
+        
          gr_complex * d_current_line_corr;  
          gr_complex * d_historic_line_corr;  
          float * d_abs_historic_line_corr;  
-         */
+         
         // correlation with the last frame 
-         /*
+         
          gr_complex * d_current_frame_corr;  
          gr_complex * d_historic_frame_corr;  
          float * d_abs_historic_frame_corr;  
-         */
-        // correlation with the last line 
-        gr_complex * d_current_line_corr;  
-        gr_complex * d_historic_line_corr;  
-        float * d_abs_historic_line_corr;  
-        // correlation with the last frame 
-        gr_complex * d_current_frame_corr;  
-        gr_complex * d_historic_frame_corr;  
-        float * d_abs_historic_frame_corr; 
-      
+         
+         bool d_stop_fine_sampling_synch;
         // where is the line correlation peak  
          int d_peak_line_index;
 
@@ -104,7 +96,10 @@ namespace gr {
         void set_iHsize_msg(pmt::pmt_t msg);
 
         void set_Vsize_msg(pmt::pmt_t msg);
-        
+
+
+        gr::thread::mutex d_mutex;
+        void set_ena_msg(pmt::pmt_t msg);
      public:
       fine_sampling_synchronization_impl(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba);
       ~fine_sampling_synchronization_impl();
@@ -124,5 +119,4 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_TEMPEST_FINE_SAMPLING_SYNCHRONIZATION_IMPL_H */
-
 

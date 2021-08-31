@@ -61,16 +61,6 @@ namespace gr {
             d_max_deviation = max_deviation;
             set_Htotal_Vtotal(Htotal, Vtotal);
 
-            // PMT ports
-            message_port_register_in(pmt::mp("ratio"));
-            message_port_register_in(pmt::mp("iHsize"));
-            message_port_register_in(pmt::mp("Vsize"));
-
-            // PMT handlers
-            set_msg_handler(pmt::mp("ratio"),  [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_ratio_msg(msg); });
-            set_msg_handler(pmt::mp("iHsize"), [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_iHsize_msg(msg); });
-            set_msg_handler(pmt::mp("Vsize"),  [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_Vsize_msg(msg); });
-
             d_alpha_samp_inc = 1e-1;
             
             d_samp_phase = 0; 
@@ -82,7 +72,19 @@ namespace gr {
             const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
             set_alignment(std::max(1, alignment_multiple));
 
-            
+
+            // PMT ports
+            message_port_register_in(pmt::mp("ratio"));
+            message_port_register_in(pmt::mp("iHsize"));
+            message_port_register_in(pmt::mp("Vsize"));
+            message_port_register_in(pmt::mp("en"));
+
+            // PMT handlers
+            set_msg_handler(pmt::mp("ratio"),  [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_ratio_msg(msg); });
+            set_msg_handler(pmt::mp("iHsize"), [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_iHsize_msg(msg); });
+            set_msg_handler(pmt::mp("Vsize"),  [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_Vsize_msg(msg); });
+            set_msg_handler(pmt::mp("en"),  [this](const pmt::pmt_t& msg) {fine_sampling_synchronization_impl::set_ena_msg(msg); });
+
             //set_output_multiple(d_Htotal);
 
         }
@@ -92,16 +94,13 @@ namespace gr {
          */
         fine_sampling_synchronization_impl::~fine_sampling_synchronization_impl()
         {
-          
-          volk_free(d_current_line_corr);
-          volk_free(d_historic_line_corr);
-          volk_free(d_abs_historic_line_corr);
-          volk_free(d_current_frame_corr);
-          volk_free(d_historic_frame_corr);
-          volk_free(d_abs_historic_frame_corr);
-          
+            delete [] d_current_line_corr;
+            delete [] d_historic_line_corr;
+            delete [] d_abs_historic_line_corr;
+            delete [] d_current_frame_corr;
+            delete [] d_historic_frame_corr;
+            delete [] d_abs_historic_frame_corr;
         }
-
 
         void
             fine_sampling_synchronization_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
@@ -129,81 +128,53 @@ namespace gr {
 
             d_peak_line_index = 0;
             d_samp_inc_rem = 0;
+            d_stop_fine_sampling_synch = 0;
             d_new_interpolation_ratio_rem = 0;
-            //I'll estimate the new sampling synchronization asap
-            d_next_update = 0;
-
-            //VOLK alignment as recommended by GNU Radio's Manual. It has a similar effect 
-            //than set_output_multiple(), thus we will generally get multiples of this value
-            //as noutput_items. 
-            const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
 
             // d_current_line_corr[i] and derivatives will keep the correlation between pixels 
             // px[t] and px[t+Htotal+i]
-            //d_current_line_corr = new gr_complex[2*d_max_deviation_px + 1];
-            //d_historic_line_corr = new gr_complex[2*d_max_deviation_px + 1];
-            //d_abs_historic_line_corr = new float[2*d_max_deviation_px + 1];
+            d_current_line_corr = new gr_complex[2*d_max_deviation_px + 1];
+            d_historic_line_corr = new gr_complex[2*d_max_deviation_px + 1];
+            d_abs_historic_line_corr = new float[2*d_max_deviation_px + 1];
 
             // d_current_frame_corr[i] and derivatives will keep the correlation between pixels 
             // px[t] and px[t+Htotal*Vtotal+i]. Since a single pixel de-alignment with the next line will 
             // mean d_Vtotal pixels de-alignments with the next frame, these arrays are much bigger. 
             // However, instead of always calculating the whole of them, I'll only calculate around those
             // indicated by the max in the d_abs_historic_line_corr. 
-            //d_current_frame_corr = new gr_complex[2*(d_max_deviation_px+1)*d_Vtotal + 1];
-            //d_historic_frame_corr = new gr_complex[2*(d_max_deviation_px+1)*d_Vtotal + 1];
-            //d_abs_historic_frame_corr = new float[2*(d_max_deviation_px+1)*d_Vtotal + 1];
-            
-            
-            d_current_line_corr =       (gr_complex*)volk_malloc((2*d_max_deviation_px + 1)              *sizeof(gr_complex), volk_get_alignment() );
-            d_historic_line_corr =      (gr_complex*)volk_malloc((2*d_max_deviation_px + 1)              *sizeof(gr_complex), volk_get_alignment() );
-            d_current_frame_corr =      (gr_complex*)volk_malloc((2*(d_max_deviation_px+1)*d_Vtotal + 1) *sizeof(gr_complex), volk_get_alignment() );
-            d_historic_frame_corr =     (gr_complex*)volk_malloc((2*(d_max_deviation_px+1)*d_Vtotal + 1) *sizeof(gr_complex), volk_get_alignment() );
+            d_current_frame_corr = new gr_complex[2*(d_max_deviation_px+1)*d_Vtotal + 1];
+            d_historic_frame_corr = new gr_complex[2*(d_max_deviation_px+1)*d_Vtotal + 1];
+            d_abs_historic_frame_corr = new float[2*(d_max_deviation_px+1)*d_Vtotal + 1];
+            //I'll estimate the new sampling synchronization asap
+            d_next_update = 0;
 
-              /* 
-                Alignment per Block of malloc / type necessary? Floats
-              const int float_alignment = volk_get_alignment() / sizeof(float);
-              set_alignment(std::max(1, float_alignment));
-              */      
-            d_abs_historic_line_corr =  (float*)volk_malloc((2*d_max_deviation_px + 1)              *sizeof(float),     volk_get_alignment() );
-            d_abs_historic_frame_corr = (float*)volk_malloc((2*(d_max_deviation_px+1)*d_Vtotal + 1) *sizeof(float),     volk_get_alignment() );
-            /* 
-            Alignment per Block of malloc / type necessary? Floats
-            const int float_alignment = volk_get_alignment() / sizeof(float);
-            set_alignment(std::max(1, float_alignment));
-            */
-            
-
-            memset(&d_current_line_corr[0],         0,  sizeof(gr_complex)*(2*d_max_deviation_px+1));
-            memset(&d_historic_line_corr[0],        0,  sizeof(gr_complex)*(2*d_max_deviation_px+1));
-            memset(&d_abs_historic_line_corr[0],    0,  sizeof(float)*(2*d_max_deviation_px+1));
-            memset(&d_current_frame_corr[0],        0,  sizeof(gr_complex)*(2*d_max_deviation_px*d_Vtotal+1));
-            memset(&d_historic_frame_corr[0],       0,  sizeof(gr_complex)*(2*d_max_deviation_px*d_Vtotal+1));
-            memset(&d_abs_historic_frame_corr[0],   0,  sizeof(float)*(2*d_max_deviation_px*d_Vtotal+1));
+            for (int i = 0; i<2*d_max_deviation_px+1; i++){
+                d_historic_line_corr[i] = 0;
+                d_abs_historic_line_corr[i] = 0;
+            }
+            for (int i = 0; i<2*d_max_deviation_px*d_Vtotal+1; i++){
+                d_historic_frame_corr[i] = 0;
+                d_abs_historic_frame_corr[i] = 0;
+            }
 
             printf("[TEMPEST] Setting Htotal to %i and Vtotal to %i in fine sampling synchronization block.\n", Htotal, Vtotal);
 
-            
         }
 
-        int fine_sampling_synchronization_impl::interpolate_input(const gr_complex * in, gr_complex * out, int size){
-            int ii = 0; // input index
-            int oo = 0; // output index
 
-            double s, f; 
-            int incr; 
-            while(oo < size) {
-                out[oo++] = d_inter.interpolate(&in[ii], d_samp_phase);
+        void fine_sampling_synchronization_impl::set_ena_msg(pmt::pmt_t msg){
 
-                s = d_samp_phase + d_samp_inc_rem + 1;
-                f = floor(s);
-                incr = (int)f;
-                d_samp_phase = s - f;
-                ii += incr;
+            if (pmt::is_bool(msg)) {
+                bool en = pmt::to_bool(msg);
+                gr::thread::scoped_lock l(d_mutex);
+                d_stop_fine_sampling_synch = !en;
+                printf("Fine Samp Received Sampling Stop.\n");
+            } else {
+                GR_LOG_WARN(d_logger,
+                            "Fine Samp Received : Non-PMT type received, expecting Boolean PMT\n");
             }
-
-            // return how many inputs we required to generate d_cp_length+d_fft_length outputs 
-            return ii;
         }
+
 
         void fine_sampling_synchronization_impl::set_ratio_msg(pmt::pmt_t msg){
 
@@ -214,7 +185,7 @@ namespace gr {
                 pmt::pmt_t val = pmt::cdr(msg);
                 if(pmt::eq(key, pmt::string_to_symbol("ratio"))) {
                     if(pmt::is_number(val)) {
-                        d_new_interpolation_ratio_rem = pmt::to_double(val);
+                        //d_new_interpolation_ratio_rem = pmt::to_double(val);
                         //set_Htotal_Vtotal(d_Htotal, d_Vtotal);
                     }
                 }
@@ -252,6 +223,27 @@ namespace gr {
                 }
             }
         }
+
+        int fine_sampling_synchronization_impl::interpolate_input(const gr_complex * in, gr_complex * out, int size){
+            int ii = 0; // input index
+            int oo = 0; // output index
+
+            double s, f; 
+            int incr; 
+            while(oo < size) {
+                out[oo++] = d_inter.interpolate(&in[ii], d_samp_phase);
+
+                s = d_samp_phase + d_samp_inc_rem + 1;
+                f = floor(s);
+                incr = (int)f;
+                d_samp_phase = s - f;
+                ii += incr;
+            }
+
+            // return how many inputs we required to generate d_cp_length+d_fft_length outputs 
+            return ii;
+        }
+
 
         void fine_sampling_synchronization_impl::estimate_peak_line_index(const gr_complex * in, int in_size)
         {
@@ -316,7 +308,9 @@ namespace gr {
 
                 //if(d_dist(d_gen)<d_proba_of_updating){
                 d_next_update -= noutput_items;
-                if(d_next_update <= 0){
+                gr::thread::scoped_lock l(d_mutex);
+                if(d_next_update <= 0 && d_stop_fine_sampling_synch==0){
+
                     estimate_peak_line_index(in, noutput_items);
                     // If noutput_items is too big, I only use a single line
                     //update_interpolation_ratio(in, std::min(noutput_items,d_Htotal));
@@ -325,6 +319,8 @@ namespace gr {
                     if (d_next_update<=-10*d_Htotal){
                         d_next_update = d_dist(d_gen);
                     }
+                    printf("\b\b\b\b\b\b\b\b Update \t");
+
                 }
                 int required_for_interpolation = noutput_items; 
                 
@@ -351,4 +347,6 @@ namespace gr {
 
     } /* namespace tempest */
 } /* namespace gr */
+
+
 
