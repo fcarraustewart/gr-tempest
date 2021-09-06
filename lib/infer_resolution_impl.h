@@ -52,13 +52,14 @@ namespace gr {
       uint32_t d_search_skip;
       uint32_t d_search_margin;
       uint32_t d_vtotal_est;
+      bool d_flag;
 
       //Results to publish
       /*long d_refresh_rate;
       long d_Hvisible;
       long d_Vvisible;*/
-      long d_Hblank;
-      long d_Vblank;
+      long d_Hsize;
+      long d_Vsize;
 
       //Counters
       uint32_t d_work_counter;
