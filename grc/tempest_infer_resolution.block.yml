@@ -38,13 +38,13 @@ outputs:
 - label: Vvisible
   domain: message
   optional: true
-- label: Vblank
+- label: Vsize
   domain: message
   optional: true
 - label: Hvisible
   domain: message
   optional: true
-- label: Hblank
+- label: Hsize
   domain: message
   optional: true
 file_format: 1

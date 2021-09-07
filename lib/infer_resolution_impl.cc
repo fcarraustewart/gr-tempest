@@ -197,8 +197,8 @@ namespace gr {
       //d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
       if (d_flag)  
       {
-	//if (yt < (d_Vsize+100) && (yt > (d_Vsize-100)))
-	if (yt < 1225 && yt > 1025)
+	if ((yt < (d_Vsize+500)) && (yt > (d_Vsize-500)))
+	//if (yt < 1225 && yt > 1025)
 	{
 		d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
 		
@@ -207,8 +207,8 @@ namespace gr {
       }
       else 
       {
-	//if (yt < (d_Vsize+100) && yt>(d_Vsize-100))
-	if (yt < 1225 && yt > 1025)
+	if ((yt < (d_Vsize+500)) && (yt>(d_Vsize-500)))
+	//if (yt < 1225 && yt > 1025)
 	{
 		d_vtotal_est = yt;
 		d_flag = true;

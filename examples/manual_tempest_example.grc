@@ -48,7 +48,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1920'
+    value: '1024'
   states:
     bus_sink: false
     bus_source: false
@@ -93,7 +93,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1080'
+    value: '768'
   states:
     bus_sink: false
     bus_source: false
@@ -274,7 +274,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '240'
-    value: '60'
+    value: '75'
     widget: counter
   states:
     bus_sink: false
@@ -287,7 +287,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: int(19980e3)
+    value: int(20e6)
   states:
     bus_sink: false
     bus_source: false
@@ -373,7 +373,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/victoria/GNUfiles/grabaciones/test_19980KHz_1920_1080.dat
+    file: /home/victoria/GNUfiles/grabaciones/test20M_1024_768.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -995,15 +995,11 @@ connections:
 - [tempest_fine_sampling_synchronization_0, '0', blocks_delay_0, '0']
 - [tempest_fine_sampling_synchronization_0, '0', tempest_sync_detector_0, '0']
 - [tempest_infer_resolution_0, '0', blocks_null_sink_0, '0']
-- [tempest_infer_resolution_0, Hblank, tempest_message_to_var_0_0_0_0_0, port0]
+- [tempest_infer_resolution_0, Hsize, tempest_message_to_var_0_0_0_0_0, port0]
 - [tempest_infer_resolution_0, Hvisible, tempest_message_to_var_0_0_0_0, port0]
-- [tempest_infer_resolution_0, Vblank, tempest_message_to_var_0_0_0, port0]
+- [tempest_infer_resolution_0, Vsize, tempest_message_to_var_0_0_0, port0]
 - [tempest_infer_resolution_0, Vvisible, tempest_message_to_var_0_0, port0]
 - [tempest_infer_resolution_0, refresh_rate, tempest_message_to_var_0, port0]
-- [tempest_normalize_flow_0, '0', blocks_float_to_short_0_0, '0']
-- [tempest_sync_detector_0, '0', blocks_complex_to_mag_0, '0']
-- [uhd_usrp_source_0, '0', blocks_file_sink_0, '0']
-- [uhd_usrp_source_0, '0', tempest_fine_sampling_synchronization_0, '0']
 
 metadata:
   file_format: 1
