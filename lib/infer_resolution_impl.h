@@ -37,7 +37,7 @@ namespace gr {
       // Nothing to declare in this block.
 
      public:
-      infer_resolution_impl(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode);
+      infer_resolution_impl(int sample_rate, int size, int refresh_rate, int Vsize, int Hvisible, bool automatic_mode);
       ~infer_resolution_impl();
 
       //Received parameters
@@ -52,6 +52,7 @@ namespace gr {
       uint32_t d_search_skip;
       uint32_t d_search_margin;
       uint32_t d_vtotal_est;
+      long d_refresh_rate_est;
       bool d_flag;
 
       //Results to publish
@@ -68,6 +69,7 @@ namespace gr {
       void publish_messages();
       void search_table(double fv_estimated);
       
+      void set_refresh_rate(int refresh_rate);
       // Where all the action really happens
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 

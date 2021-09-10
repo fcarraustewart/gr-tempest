@@ -51,6 +51,8 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(int sample_rate, int size, int refresh_rate, int Vvisible, int Hvisible, bool automatic_mode);
+      
+      virtual void set_refresh_rate(int refresh_rate) = 0;
     };
 
   } // namespace tempest

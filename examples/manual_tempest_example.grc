@@ -48,7 +48,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1024'
+    value: '1152'
   states:
     bus_sink: false
     bus_source: false
@@ -93,7 +93,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '768'
+    value: '720'
   states:
     bus_sink: false
     bus_source: false
@@ -113,7 +113,7 @@ blocks:
     start: '0'
     step: '1'
     stop: int(2160*1.5)
-    value: '1125'
+    value: '1500'
     widget: counter
   states:
     bus_sink: false
@@ -122,6 +122,18 @@ blocks:
     coordinate: [878, 14]
     rotation: 0
     state: enabled
+- name: Vsize
+  id: variable
+  parameters:
+    comment: ''
+    value: '1125'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [705, 150]
+    rotation: 0
+    state: disabled
 - name: harmonic
   id: variable_qtgui_range
   parameters:
@@ -142,7 +154,7 @@ blocks:
     bus_structure: null
     coordinate: [1028, 14]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: horizontal_offset
   id: variable_qtgui_range
   parameters:
@@ -163,7 +175,7 @@ blocks:
     bus_structure: null
     coordinate: [1139, 14]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: interpolatedHblank
   id: variable
   parameters:
@@ -228,7 +240,7 @@ blocks:
     bus_structure: null
     coordinate: [187, 15]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: lines_offset
   id: variable_qtgui_range
   parameters:
@@ -249,7 +261,7 @@ blocks:
     bus_structure: null
     coordinate: [751, 13]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: px_rate
   id: variable
   parameters:
@@ -274,7 +286,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '240'
-    value: '75'
+    value: '60'
     widget: counter
   states:
     bus_sink: false
@@ -282,12 +294,36 @@ blocks:
     bus_structure: null
     coordinate: [447, 15]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: refresh_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: (1/time_peak)*1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [39, 292]
+    rotation: 0
+    state: disabled
+- name: refresh_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '74.6'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [358, 127]
+    rotation: 0
+    state: true
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: int(20e6)
+    value: int(19.9530382e6)
   states:
     bus_sink: false
     bus_source: false
@@ -295,6 +331,48 @@ blocks:
     coordinate: [130, 336]
     rotation: 0
     state: enabled
+- name: time_est
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: time_est
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '100'
+    value: samp_rate/refresh_rate
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [541, 135]
+    rotation: 0
+    state: disabled
+- name: time_peak
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 3,0,1,1
+    label: Time_peak (us)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '18000'
+    value: '13333'
+    widget: counter
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 467]
+    rotation: 0
+    state: disabled
 - name: FFT_autocorrelation_0
   id: FFT_autocorrelation
   parameters:
@@ -373,7 +451,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/victoria/GNUfiles/grabaciones/test20M_1024_768.dat
+    file: /home/victoria/GNUfiles/grabaciones/test_19.9530382MHz_832_624.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -441,6 +519,103 @@ blocks:
     coordinate: [370, 211]
     rotation: 0
     state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: int(4096*512/4)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [406, 796]
+    rotation: 0
+    state: true
 - name: tempest_fine_sampling_synchronization_0
   id: tempest_fine_sampling_synchronization
   parameters:
@@ -465,7 +640,7 @@ blocks:
   id: tempest_infer_resolution
   parameters:
     Hvisible: Hdisplay
-    Vvisible: Vdisplay
+    Vsize: Vsize
     affinity: ''
     alias: ''
     automatic_mode: bool(0)
@@ -985,6 +1160,7 @@ blocks:
     state: disabled
 
 connections:
+- [FFT_autocorrelation_0, '0', qtgui_time_sink_x_0, '0']
 - [FFT_autocorrelation_0, '0', tempest_infer_resolution_0, '0']
 - [blocks_complex_to_mag_0, '0', tempest_normalize_flow_0, '0']
 - [blocks_delay_0, '0', blocks_complex_to_mag_0, '0']
@@ -998,8 +1174,6 @@ connections:
 - [tempest_infer_resolution_0, Hsize, tempest_message_to_var_0_0_0_0_0, port0]
 - [tempest_infer_resolution_0, Hvisible, tempest_message_to_var_0_0_0_0, port0]
 - [tempest_infer_resolution_0, Vsize, tempest_message_to_var_0_0_0, port0]
-- [tempest_infer_resolution_0, Vvisible, tempest_message_to_var_0_0, port0]
-- [tempest_infer_resolution_0, refresh_rate, tempest_message_to_var_0, port0]
 
 metadata:
   file_format: 1
