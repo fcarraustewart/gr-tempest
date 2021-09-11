@@ -286,7 +286,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '240'
-    value: '60'
+    value: '75'
     widget: counter
   states:
     bus_sink: false
@@ -304,21 +304,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [39, 292]
+    coordinate: [353, 128]
     rotation: 0
-    state: disabled
-- name: refresh_rate
-  id: variable
-  parameters:
-    comment: ''
-    value: '74.6'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [358, 127]
-    rotation: 0
-    state: true
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -361,7 +349,7 @@ blocks:
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
-    start: '0'
+    start: '1'
     step: '1'
     stop: '18000'
     value: '13333'
@@ -372,12 +360,13 @@ blocks:
     bus_structure: null
     coordinate: [64, 467]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: FFT_autocorrelation_0
   id: FFT_autocorrelation
   parameters:
     affinity: ''
     alias: ''
+    alpha: '1.0'
     comment: ''
     fac_decimation: '10'
     fft_size: int(4096*512)
@@ -388,7 +377,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [228, 657]
+    coordinate: [233, 655]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_mag_0
@@ -451,7 +440,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/victoria/GNUfiles/grabaciones/test_19.9530382MHz_832_624.dat
+    file: /home/pablo/fing/proyecto/grabaciones/test_19.9530382MHz_832_624.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
