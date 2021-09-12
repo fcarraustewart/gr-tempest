@@ -51,6 +51,7 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba, double actual_samp_rate);
+      virtual void set_frame_drop_parameters(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba, double actual_samp_rate) = 0;
     };
 
   } // namespace tempest

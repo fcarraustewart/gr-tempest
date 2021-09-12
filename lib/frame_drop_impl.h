@@ -104,7 +104,8 @@ namespace gr {
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
       void get_required_samples(int size);
-
+      void set_frame_drop_parameters(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba, double actual_samp_rate);
+      
       int general_work(int noutput_items,
            gr_vector_int &ninput_items,
            gr_vector_const_void_star &input_items,

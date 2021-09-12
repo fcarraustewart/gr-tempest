@@ -69,20 +69,15 @@ namespace gr
 
       //Fixed values
       d_discarded_amount_per_frame = 3;
-
-      //d_correct_sampling = correct_sampling; 
-      d_proba_of_updating = update_proba;
-
-      d_max_deviation = max_deviation;
-
+      
+      set_frame_drop_parameters( Htotal, Vtotal, correct_sampling, max_deviation,  update_proba, actual_samp_rate);
+      
       d_alpha_samp_inc = 1e-1;
       d_last_freq = 0;
-      //d_actual_samp_rate = actual_samp_rate;
       d_samp_phase = 0; 
       d_alpha_corr = 1e-6; 
       
-      d_Htotal = Htotal; 
-      d_Vtotal = Vtotal; 
+
       d_required_for_interpolation = d_Htotal*d_Vtotal;
       //d_max_deviation = max_deviation; 
       d_max_deviation_px = (int)std::ceil(d_Htotal*d_max_deviation);
@@ -186,8 +181,26 @@ namespace gr
             ninput_items_required[i] = (int)ceil((noutput_items + 1) * (2+d_samp_inc_rem)) + d_inter.ntaps() ;
         }
     }
+    
+    void 
+    frame_drop_impl::set_frame_drop_parameters(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba, double actual_samp_rate)
+    {
+      // If any parameter changed, I reset the block
+      
+     //d_correct_sampling = correct_sampling; 
+      d_proba_of_updating = update_proba;
+
+      d_max_deviation = max_deviation;
+      
+      d_Htotal = Htotal; 
+      d_Vtotal = Vtotal; 
+      //d_actual_samp_rate = actual_samp_rate;
+	    
+	printf("[TEMPEST] Setting Htotal to %i in framedrop block.\n", Htotal);
+	}
 
 
+      
     void
     frame_drop_impl::estimate_peak_line_index(const gr_complex * in, int in_size)
     {

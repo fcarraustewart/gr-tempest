@@ -5,6 +5,9 @@ templates:
   imports: import tempest
   make: tempest.frame_drop(${Htotal}, ${Vtotal}, ${correct_sampling}, ${max_deviation},
     ${update_proba}, ${actual_samp_rate})
+  callbacks:
+  - set_frame_drop_parameters(${Htotal}, ${Vtotal}, ${correct_sampling}, ${max_deviation},
+    ${update_proba}, ${actual_samp_rate})
 parameters:
 - id: Htotal
   label: Horizontal total
