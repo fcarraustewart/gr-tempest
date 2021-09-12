@@ -311,7 +311,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: int(19.9530382e6)
+    value: '16065000'
   states:
     bus_sink: false
     bus_source: false
@@ -440,7 +440,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/pablo/fing/proyecto/grabaciones/test_19.9530382MHz_832_624.dat
+    file: /home/felipe/gnuradio/git/grabaciones_local/16con065megahertz4.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -625,6 +625,27 @@ blocks:
     coordinate: [605, 220]
     rotation: 0
     state: disabled
+- name: tempest_frame_drop_0
+  id: tempest_frame_drop
+  parameters:
+    Htotal: interpolatedHsize
+    Vtotal: Vsize
+    actual_samp_rate: samp_rate
+    affinity: ''
+    alias: ''
+    comment: ''
+    correct_sampling: '1'
+    max_deviation: 100.0/interpolatedHsize
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    update_proba: 1.2e-1/(interpolatedHsize*Vsize)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [279, 356]
+    rotation: 0
+    state: enabled
 - name: tempest_infer_resolution_0
   id: tempest_infer_resolution
   parameters:
@@ -632,7 +653,7 @@ blocks:
     Vsize: Vsize
     affinity: ''
     alias: ''
-    automatic_mode: bool(0)
+    automatic_mode: bool('0')
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -643,7 +664,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [505, 603]
+    coordinate: [526, 527]
     rotation: 0
     state: enabled
 - name: tempest_message_to_var_0
@@ -1155,14 +1176,13 @@ connections:
 - [blocks_delay_0, '0', blocks_complex_to_mag_0, '0']
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_float_to_short_0_0, '0', video_sdl_sink_0_0_0, '0']
-- [blocks_throttle_0, '0', FFT_autocorrelation_0, '0']
 - [blocks_throttle_0, '0', tempest_fine_sampling_synchronization_0, '0']
+- [blocks_throttle_0, '0', tempest_frame_drop_0, '0']
 - [tempest_fine_sampling_synchronization_0, '0', blocks_delay_0, '0']
 - [tempest_fine_sampling_synchronization_0, '0', tempest_sync_detector_0, '0']
+- [tempest_frame_drop_0, '0', FFT_autocorrelation_0, '0']
 - [tempest_infer_resolution_0, '0', blocks_null_sink_0, '0']
-- [tempest_infer_resolution_0, Hsize, tempest_message_to_var_0_0_0_0_0, port0]
-- [tempest_infer_resolution_0, Hvisible, tempest_message_to_var_0_0_0_0, port0]
-- [tempest_infer_resolution_0, Vsize, tempest_message_to_var_0_0_0, port0]
+- [tempest_infer_resolution_0, Vsize, FFT_autocorrelation_0, en]
 
 metadata:
   file_format: 1

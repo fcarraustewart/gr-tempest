@@ -364,8 +364,8 @@ namespace gr {
           if(d_frame_average_complete)
           {
             //Finding the position that maximizes beta both horizontally and vertically for the frame
-            find_shift (&d_blanking_index_h, &d_blanking_size_h,  d_avg_h_line, d_Htotal, d_Htotal*0.05f, d_LOWPASS_COEFF_H);
-            find_shift (&d_blanking_index_v, &d_blanking_size_v,  d_avg_v_line, d_Vtotal, d_Vtotal*0.005f, d_LOWPASS_COEFF_V);          
+            find_shift (&d_blanking_index_h, &d_blanking_size_h,  d_avg_h_line, d_Htotal, d_Htotal*0.05f, LOWPASS_COEFF_H);
+            find_shift (&d_blanking_index_v, &d_blanking_size_v,  d_avg_v_line, d_Vtotal, d_Vtotal*0.005f, LOWPASS_COEFF_V);          
 
             //As the information is used, we set up the variables to receive the next frame
             d_frame_average_complete = 0;

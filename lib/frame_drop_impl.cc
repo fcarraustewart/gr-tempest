@@ -159,6 +159,7 @@ namespace gr
 
       // PMT port
       message_port_register_out(pmt::mp("ratio"));
+      printf("[TEMPEST::Framedrop] Constructor Htotal to %i, Vtotal to %i in framedrop block.\n", Htotal, Vtotal); 
 
     }
 
@@ -202,7 +203,7 @@ namespace gr
         d_Vtotal = Vtotal; 
         //d_actual_samp_rate = actual_samp_rate;
 	    
-	     printf("[TEMPEST] Setting Htotal to %i in framedrop block.\n", Htotal);
+	     printf("[TEMPEST::Framedrop] Setting Htotal to %i, Vtotal to %i in framedrop block.\n", Htotal, Vtotal);
     } 
     void 
     frame_drop_impl::set_ena_msg(pmt::pmt_t msg){
