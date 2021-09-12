@@ -39,6 +39,11 @@
 #include <math.h>
 #include <gnuradio/math.h>
 
+#define LOWPASS_COEFF_V 0.2
+#define LOWPASS_COEFF_H 0.1
+#define GAUSSIAN_ALPHA 1.0
+
+
 namespace gr {
   namespace tempest {
 
@@ -57,10 +62,6 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
-      //Fixed parameters
-      d_LOWPASS_COEFF_V = 0.2;
-      d_LOWPASS_COEFF_H = 0.1;
-      d_GAUSSIAN_ALPHA = 1.0;
 
       //Input data
       d_hdisplay = hscreen;
@@ -174,7 +175,7 @@ namespace gr {
 
     float sync_detector_impl::calculate_gauss_coeff(float N, float i) 
     {
-      return(expf(-2.0f*d_GAUSSIAN_ALPHA*d_GAUSSIAN_ALPHA*i*i/(N*N)));
+      return(expf(-2.0f*GAUSSIAN_ALPHA*GAUSSIAN_ALPHA*i*i/(N*N)));
     }
 
 
@@ -410,8 +411,8 @@ namespace gr {
         if(d_frame_average_complete)
         {
           //Finding the position that maximizes beta both horizontally and vertically for the frame
-          find_shift (&d_blanking_index_h, &d_blanking_size_h,  d_avg_h_line, d_Htotal, d_Htotal*0.05f, d_LOWPASS_COEFF_H);
-          find_shift (&d_blanking_index_v, &d_blanking_size_v,  d_avg_v_line, d_Vtotal, d_Vtotal*0.005f, d_LOWPASS_COEFF_V);          
+          find_shift (&d_blanking_index_h, &d_blanking_size_h,  d_avg_h_line, d_Htotal, d_Htotal*0.05f, LOWPASS_COEFF_H);
+          find_shift (&d_blanking_index_v, &d_blanking_size_v,  d_avg_v_line, d_Vtotal, d_Vtotal*0.005f, LOWPASS_COEFF_V);          
 
           //As the information is used, we set up the variables to receive the next frame
           d_frame_average_complete = 0;

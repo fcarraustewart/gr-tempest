@@ -79,12 +79,12 @@ namespace gr {
       void set_iHblank_msg(pmt::pmt_t msg);
       void set_Vsize_msg(pmt::pmt_t msg);
       void set_Vblank_msg(pmt::pmt_t msg);
-
+	/*
       //Fixed parameters
       float d_LOWPASS_COEFF_V;
       float d_LOWPASS_COEFF_H;
       float d_GAUSSIAN_ALPHA;
-
+*/
      public:
       sync_detector_impl(int hscreen, int vscreen, int hblanking, int vblanking);
       ~sync_detector_impl();
