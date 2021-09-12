@@ -68,7 +68,7 @@ namespace gr
       d_frames_counter = 0;
 
       //Fixed values
-      d_discarded_amount_per_frame = 3;
+      d_discarded_amount_per_frame = 30;
       
       set_frame_drop_parameters( Htotal, Vtotal, correct_sampling, max_deviation,  update_proba, actual_samp_rate);
       
@@ -76,6 +76,8 @@ namespace gr
       d_last_freq = 0;
       d_samp_phase = 0; 
       d_alpha_corr = 1e-6; 
+
+      d_start_frame_drop = 0;
       
 
       d_required_for_interpolation = d_Htotal*d_Vtotal;
@@ -90,12 +92,16 @@ namespace gr
       d_next_update = 0;
 
       // PMT ports
-      message_port_register_in(pmt::mp("iHsize"));
-      message_port_register_in(pmt::mp("Vsize"));
+      //message_port_register_in(pmt::mp("iHsize"));
+      //message_port_register_in(pmt::mp("Vsize"));
+      message_port_register_in(pmt::mp("en"));
+      message_port_register_in(pmt::mp("smpl"));
 
       // PMT handlers
-      set_msg_handler(pmt::mp("iHsize"), [this](const pmt::pmt_t& msg) {frame_drop_impl::set_iHsize_msg(msg); });
-      set_msg_handler(pmt::mp("Vsize"),  [this](const pmt::pmt_t& msg) {frame_drop_impl::set_Vsize_msg(msg); });
+      //set_msg_handler(pmt::mp("iHsize"), [this](const pmt::pmt_t& msg) {frame_drop_impl::set_iHsize_msg(msg); });
+      //set_msg_handler(pmt::mp("Vsize"),  [this](const pmt::pmt_t& msg) {frame_drop_impl::set_Vsize_msg(msg); });
+      set_msg_handler(pmt::mp("en"),   [this](const pmt::pmt_t& msg) {frame_drop_impl::set_ena_msg(msg); });
+      set_msg_handler(pmt::mp("smpl"), [this](const pmt::pmt_t& msg) {frame_drop_impl::set_smpl_msg(msg); });
 
       /* Volk_Malloc
         https://github.com/gnuradio/volk/blob/master/lib/volk_malloc.c
@@ -185,20 +191,48 @@ namespace gr
     void 
     frame_drop_impl::set_frame_drop_parameters(int Htotal, int Vtotal, int correct_sampling, float max_deviation, float update_proba, double actual_samp_rate)
     {
-      // If any parameter changed, I reset the block
+        // If any parameter changed, I reset the block
       
-     //d_correct_sampling = correct_sampling; 
-      d_proba_of_updating = update_proba;
+        //d_correct_sampling = correct_sampling; 
+        d_proba_of_updating = update_proba;
 
-      d_max_deviation = max_deviation;
+        d_max_deviation = max_deviation;
       
-      d_Htotal = Htotal; 
-      d_Vtotal = Vtotal; 
-      //d_actual_samp_rate = actual_samp_rate;
+        d_Htotal = Htotal; 
+        d_Vtotal = Vtotal; 
+        //d_actual_samp_rate = actual_samp_rate;
 	    
-	printf("[TEMPEST] Setting Htotal to %i in framedrop block.\n", Htotal);
-	}
+	     printf("[TEMPEST] Setting Htotal to %i in framedrop block.\n", Htotal);
+    } 
+    void 
+    frame_drop_impl::set_ena_msg(pmt::pmt_t msg){
 
+        if (pmt::is_bool(msg)) {
+            bool en = pmt::to_bool(msg);
+            gr::thread::scoped_lock l(d_mutex);
+            d_start_frame_drop = !en;
+            printf("Frame Dropping Start.\n");
+        } else {
+            GR_LOG_WARN(d_logger,
+                        "Frame Dropper: Non-PMT type received, expecting Boolean PMT\n");
+        }
+    }
+
+    void 
+    frame_drop_impl::set_smpl_msg(pmt::pmt_t msg){
+
+      if(pmt::is_pair(msg)) {
+        // saca el primero de la pareja
+        pmt::pmt_t key = pmt::car(msg);
+        // saca el segundo
+        pmt::pmt_t val = pmt::cdr(msg);
+        if(pmt::eq(key, pmt::string_to_symbol("smpl"))) {
+          if(pmt::is_number(val)) {
+            d_required_for_interpolation = ((uint32_t)(pmt::to_double(val)));
+          }
+        }
+      }
+    }
 
       
     void
@@ -219,7 +253,7 @@ namespace gr
       uint16_t peak_index = 0;
       uint32_t d_datain_length = (uint32_t)(2*d_max_deviation_px+1);
       volk_32f_index_max_16u(&peak_index, d_abs_historic_line_corr, 2*d_max_deviation_px+1); 
-
+      //if peak index > 0:
       d_peak_line_index = (peak_index-d_max_deviation_px);
       delete [] d_in_conj;
     }
@@ -233,7 +267,9 @@ namespace gr
 
       int corrsize = 2*d_Vtotal+1;
       int offset = (d_max_deviation_px+d_peak_line_index)*d_Vtotal;
-      int offset_in = d_peak_line_index*d_Vtotal;
+      //2*d_max_deviation_px*d_Vtotal+1 //2*d_max_deviation_px*d_Vtotal+1
+      int offset_in; 
+      d_peak_line_index >= 0 ? offset_in = d_peak_line_index*d_Vtotal : offset_in = 0;
       for (int i=0; i<in_size; i++)
       {
         volk_32fc_s32fc_multiply_32fc(&d_current_frame_corr[offset], &in[i+d_Htotal*d_Vtotal+offset_in-d_Vtotal], d_in_conj[i], corrsize);
@@ -245,7 +281,9 @@ namespace gr
       uint32_t d_datain_length = (uint32_t)(corrsize);
       volk_32f_index_max_16u(&peak_index, &d_abs_historic_frame_corr[offset], corrsize); 
 
+//(d_peak_line_index - 1) * d_Vtotal fixes array center (0,0)
       d_new_interpolation_ratio_rem = ((double)(peak_index+offset_in-d_Vtotal))/(double)(d_Vtotal*d_Htotal);
+      
       delete [] d_in_conj;
     }
 
@@ -274,7 +312,7 @@ namespace gr
       d_required_for_interpolation = ii;
     }
 
-
+    /*
     void 
     frame_drop_impl::set_iHsize_msg(pmt::pmt_t msg)
     {
@@ -307,7 +345,7 @@ namespace gr
             }
         }
     }
-
+    */
 
     int
     frame_drop_impl::general_work (int noutput_items,
@@ -321,15 +359,19 @@ namespace gr
       int consumed = 0, out_amount = 0, aux;
       
       ////////////////////////////////////////////////////////////
-     
+     /*
       d_next_update -= noutput_items;
+      gr::thread::scoped_lock l(d_mutex);
 
-      if(d_next_update <= 0){
+      if(d_next_update <= 0 && d_start_frame_drop==0){
 
         estimate_peak_line_index(&in[0], noutput_items);
         update_interpolation_ratio(&in[0], noutput_items);
 
         double new_freq = d_new_interpolation_ratio_rem;
+        
+        //Add Tag.
+        add_item_tag(0, nitems_written(0), pmt::mp("update_interpolation_ratio"), pmt::PMT_T);
 
         message_port_pub(
           pmt::mp("ratio"), 
@@ -343,27 +385,46 @@ namespace gr
           d_next_update = d_dist(d_gen);
         }
       }
-     
+     */
       ///////////////////////////////////////////////////////////
 
-      for (int i=0; i<noutput_items; i++){
+      //if ((d_start_frame_drop==0) && (d_required_for_interpolation==0)){
+      if (d_required_for_interpolation==0) {
 
-        d_sample_counter++;
-
-        if (d_sample_counter <= d_required_for_interpolation){
-
+        for (int i=0; i<noutput_items; i++){
           out[i]=in[i];
-          out_amount++;
+        }
+        out_amount = noutput_items;
 
-        } else if (d_sample_counter == (d_discarded_amount_per_frame*d_required_for_interpolation)){
+      } else {
 
-          d_sample_counter = 0;
-          get_required_samples(d_Htotal*d_Vtotal);
+        for (int i=0; i<noutput_items; i++){
 
+          d_sample_counter++;
+
+          if (d_sample_counter <= d_required_for_interpolation){
+
+            out[i]=in[i];
+            out_amount++;
+
+          } else if (d_sample_counter == (d_discarded_amount_per_frame*d_required_for_interpolation)){
+            consumed = i;
+            //consumed = (d_sample_counter%noutput_items);
+            d_sample_counter = 0;
+            //get_required_samples(d_Htotal*d_Vtotal);
+            //printf("Samples required for a full frame: %i \n",d_required_for_interpolation);
+
+
+            add_item_tag(0, nitems_written(0)+i, pmt::mp("trigger"), pmt::PMT_T);
+            break;
+
+          } else {
+            // Display only last generated out_amount value.
+          }
         }
       }
 
-      consumed += noutput_items;
+      consumed == 0 ? consumed += noutput_items : consumed += 0;
 
       // Tell runtime system how many input items we consumed on
       // each input stream.

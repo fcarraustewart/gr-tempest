@@ -34,10 +34,10 @@ inputs:
 - label: in
   domain: stream
   dtype: complex
-- label: iHsize
+- label: en
   domain: message
   optional: true
-- label: Vsize
+- label: smpl
   domain: message
   optional: true
 outputs:

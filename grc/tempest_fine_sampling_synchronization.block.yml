@@ -33,10 +33,7 @@ inputs:
 - label: ratio
   domain: message
   optional: true
-- label: iHsize
-  domain: message
-  optional: true
-- label: Vsize
+- label: en
   domain: message
   optional: true
 outputs:

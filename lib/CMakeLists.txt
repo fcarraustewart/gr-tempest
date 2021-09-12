@@ -30,7 +30,9 @@ list(APPEND tempest_sources
     fine_sampling_synchronization_impl.cc
     sync_detector_impl.cc
     frame_drop_impl.cc
-    infer_resolution_impl.cc )
+    infer_resolution_impl.cc
+    fft_peak_fine_sampling_sync_impl.cc
+)
 
 set(tempest_sources "${tempest_sources}" PARENT_SCOPE)
 if(NOT tempest_sources)
