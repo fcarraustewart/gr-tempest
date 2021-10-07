@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* 
+/**
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  * 
@@ -21,7 +21,17 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
+ * @file framing_impl.cc
+ *
+ * gr-tempest
+ *
+ * @date May 16, 2020
+ * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -39,7 +49,9 @@ namespace gr {
       return gnuradio::get_initial_sptr
         (new framing_impl(Htotal, Vtotal, Hdisplay, Vdisplay));
     }
-
+    /**********************************************************
+     * Function bodies
+     **********************************************************/
     /*
      * The private constructor
      */
@@ -62,6 +74,7 @@ namespace gr {
         set_output_multiple(Hdisplay);
     }
 
+    //---------------------------------------------------------
     /*
      * Our virtual destructor.
      */
@@ -69,6 +82,7 @@ namespace gr {
     {
     }
 
+    //---------------------------------------------------------
 
     void framing_impl::set_Htotal_and_Vtotal(int Htotal, int Vtotal){
 
@@ -79,6 +93,8 @@ namespace gr {
         printf("[TEMPEST] Setting Htotal to %i and Vtotal to %i in Framing block.\n",Htotal, Vtotal);
 
     }
+
+    //---------------------------------------------------------
 
     void
     framing_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
@@ -91,6 +107,8 @@ namespace gr {
        }
 
     }
+
+    //---------------------------------------------------------
 
     int
     framing_impl::general_work (int noutput_items,
@@ -126,7 +144,6 @@ namespace gr {
             d_current_line = (d_current_line+1)%std::max(d_Vdisplay,d_Vtotal);
         }
 
-        // Do <+signal processing+>
         // Tell runtime system how many input items we consumed on
         // each input stream.
         consume_each (d_consumed);

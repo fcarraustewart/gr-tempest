@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2021 gr-tempest
+/**
+ * Copyright 2021
  *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
  *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
  *    Victoria Severi   <maria.severi@fing.edu.uy>
@@ -27,7 +27,20 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
+ * 
+ * @file sync_detector_impl.cc
+ *
+ * gr-tempest
+ *
+ * @date May 3, 2021
+ * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * @author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -48,7 +61,9 @@ namespace gr {
       return gnuradio::get_initial_sptr
         (new sync_detector_impl(hscreen, vscreen, hblanking, vblanking));
     }
-
+    /**********************************************************
+     * Function bodies
+     **********************************************************/
     /*
      * The private constructor
      */
@@ -105,6 +120,7 @@ namespace gr {
       set_alignment(std::max(1, alignment_multiple));
     }
 
+    //---------------------------------------------------------
     /*
      * Our virtual destructor.
      */
@@ -115,16 +131,11 @@ namespace gr {
       delete [] d_avg_v_line;
     }
 
+    //---------------------------------------------------------
 
     void sync_detector_impl::find_best_beta (const float *data, const int total_line_size, const double total_sum, const int blanking_size, double *beta, int *beta_index)
     {
-    ////////////////////////////////////////////////////////////////////////////////
-    // Function that takes a full line (either horizontal or vertical) and a fixed//
-    // blanking size to calculate the medium energy difference between blanking   //
-    // and screen (beta) for each possible blanking position. Returns the position// 
-    // that granted the best beta and the value of beta itself.                   //
-    ////////////////////////////////////////////////////////////////////////////////
-    
+  
       const double screen_size_double = total_line_size - blanking_size;
       const double blanking_size_double = blanking_size;      
       //Doubles will be used for accuracy, as well as for beta
@@ -159,18 +170,17 @@ namespace gr {
       }
     }
 
+    //---------------------------------------------------------
 
     float sync_detector_impl::calculate_gauss_coeff(float N, float i) 
     {
       return(expf(-2.0f*d_GAUSSIAN_ALPHA*d_GAUSSIAN_ALPHA*i*i/(N*N)));
     }
 
+    //---------------------------------------------------------
 
     void sync_detector_impl::gaussianblur(float * data, int size) 
     {
-    ////////////////////////////////////////////////////////////////////////////////
-    // Marinov's gaussian blur application for a fixed-size array.                //
-    ////////////////////////////////////////////////////////////////////////////////
 
       float norm = 0.0f, c_2 = 0.0f, c_1 = 0.0f, c0 = 0.0f, c1 = 0.0f, c2 = 0.0f;
       if (norm == 0.0f) {
@@ -233,15 +243,10 @@ namespace gr {
       }
     }
 
+    //---------------------------------------------------------
+
     void sync_detector_impl::find_shift (int *blanking_index, int *blanking_size, float *data, const int total_line_size, int min_blanking_size, double lowpasscoeff)
     {    
-    //////////////////////////////////////////////////////////////////////////////
-    // Function that takes the line and runs find_best_beta for some possible   //
-    // blanking sizes. Then takes the best location (and size) returned and     //
-    // defines the new position for shifting using both the new calculation and //
-    // the previous information to prevent sudden big changes.                  //
-    //////////////////////////////////////////////////////////////////////////////
-
       gaussianblur(data, total_line_size);
       
       double total_sum = 0.0;
@@ -291,9 +296,9 @@ namespace gr {
       *blanking_index = ((int) round(raw_index * lowpasscoeff + (1.0 - lowpasscoeff) * (*blanking_index))) % ((int) total_line_size);
     }
 
+    //---------------------------------------------------------
 
-    void
-    sync_detector_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+    void sync_detector_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       int ninputs = ninput_items_required.size ();
       for (int i = 0; i < ninputs; i++){
@@ -301,9 +306,9 @@ namespace gr {
       }
     }
 
+    //---------------------------------------------------------
 
-    int
-    sync_detector_impl::general_work (int noutput_items,
+    int sync_detector_impl::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)

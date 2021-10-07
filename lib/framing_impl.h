@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* 
+/**
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  * 
@@ -21,10 +21,28 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
+ * @file framing_impl.h
+ * 
+ * @brief Block that determines output per line according to 
+ * the line count made in reference to the vertical display
+ * size.
+ *
+ * gr-tempest
+ *
+ * @date May 16, 2020
+ * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
+
+/**********************************************************
+ * Constant and macro definitions
+ **********************************************************/
 
 #ifndef INCLUDED_TEMPEST_FRAMING_IMPL_H
 #define INCLUDED_TEMPEST_FRAMING_IMPL_H
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #include <tempest/framing.h>
 
@@ -33,27 +51,52 @@ namespace gr {
 
     class framing_impl : public framing
     {
-     private:
-         int d_Htotal; 
-         int d_Vtotal; 
-         int d_Hdisplay; 
-         int d_Vdisplay; 
-         int d_current_line; 
-         float * d_zeros;
+      private:
 
-     public:
+      /**********************************************************
+       * Data declarations
+       **********************************************************/
+
+      int d_Htotal; 
+      int d_Vtotal; 
+      int d_Hdisplay; 
+      int d_Vdisplay; 
+      int d_current_line; 
+      float * d_zeros;
+
+      /**********************************************************
+       * Public function prototypes
+       **********************************************************/
+      
+      public:
       framing_impl(int Htotal, int Vtotal, int Hdisplay, int Vdisplay);
       ~framing_impl();
-
+      /**
+        * @brief Initializes variables used for horizontal and 
+        * vertical length. Operates with callback to allow changes 
+        * during execution.
+        *  
+        */
       void set_Htotal_and_Vtotal(int Htotal, int Vtotal);
-
-      // Where all the action really happens
+      //---------------------------------------------------------
+      /**
+        * @brief Used to establish the amount of samples required
+        * for a full work iteration.
+        */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-
+      //---------------------------------------------------------
+      /**
+        * @brief Receives samples in horizontal lines and counts
+        * them. Up until the vertical display size, lines are
+        * either copied in the output if they are within the
+        * total vertical size, or else replaced by zeros.
+        *  
+        */
       int general_work(int noutput_items,
            gr_vector_int &ninput_items,
            gr_vector_const_void_star &input_items,
            gr_vector_void_star &output_items);
+      //---------------------------------------------------------
     };
 
   } // namespace tempest

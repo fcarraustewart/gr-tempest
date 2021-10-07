@@ -1,27 +1,37 @@
 /* -*- c++ -*- */
-/* 
-* Copyright 2020
-*   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
-* 
-*   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
-*   Universidad de la Republica, Uruguay.
-* 
-* 
-* This is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3, or (at your option)
-* any later version.
-* 
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU General Public License
-* along with this software; see the file COPYING.  If not, write to
-* the Free Software Foundation, Inc., 51 Franklin Street,
-* Boston, MA 02110-1301, USA.
-*/
+/**
+ * Copyright 2020
+ *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * 
+ *   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
+ *   Universidad de la Republica, Uruguay.
+ * 
+ * This is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * @file Hsync_impl.cc
+ *
+ * gr-tempest
+ *
+ * @date May 16, 2020
+ * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ */
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -33,7 +43,6 @@
 #include <math.h>
 #include <gnuradio/math.h>
 
-
 namespace gr {
     namespace tempest {
 
@@ -43,7 +52,9 @@ namespace gr {
                 return gnuradio::get_initial_sptr
                     (new Hsync_impl(Htotal, delay));
             }
-
+        /**********************************************************
+         * Function bodies
+         **********************************************************/
         /*
          * The private constructor
          */
@@ -67,9 +78,9 @@ namespace gr {
             // peak_detect_init(0.8, 0.9, 30, 0.9);
             peak_detect_init(0.5, 0.9);
             
-
         }
 
+        //---------------------------------------------------------
         /*
          * Our virtual destructor.
          */
@@ -79,8 +90,10 @@ namespace gr {
             delete [] d_abs_corr;
         }
 
-        void Hsync_impl::set_Htotal_and_delay(int Htotal, int delay){
+        //---------------------------------------------------------
 
+        void Hsync_impl::set_Htotal_and_delay(int Htotal, int delay)
+        {
             d_delay = delay;
             d_Htotal = Htotal;
 
@@ -103,119 +116,95 @@ namespace gr {
             d_consecutive_aligns_threshold = 10;
             d_shorter_range_size = d_Htotal/50;
             d_max_aligns = d_Htotal/10;
- 
         }
 
-        void 
-            Hsync_impl::peak_detect_init(float threshold_factor_rise, float alpha)
-            {
-                d_avg_alpha = alpha;
-                d_threshold_factor_rise = threshold_factor_rise;
-                d_avg_max = - (float)INFINITY;
-                d_avg_min =   (float)INFINITY;
-            }
+        //---------------------------------------------------------
 
+        void Hsync_impl::peak_detect_init(float threshold_factor_rise, float alpha)
+        {
+            d_avg_alpha = alpha;
+            d_threshold_factor_rise = threshold_factor_rise;
+            d_avg_max = - (float)INFINITY;
+            d_avg_min =   (float)INFINITY;
+        }
 
-        int 
-            Hsync_impl::peak_detect_process(const float * datain, const int datain_length, int * peak_pos)
-            {
-                uint16_t peak_index = 0;
-                uint32_t d_datain_length = (uint32_t)datain_length;
-                bool success = true;
+        //---------------------------------------------------------
 
-                volk_32f_index_max_16u(&peak_index, &datain[0], d_datain_length); 
+        int Hsync_impl::peak_detect_process(const float * datain, const int datain_length, int * peak_pos)
+        {
+            uint16_t peak_index = 0;
+            uint32_t d_datain_length = (uint32_t)datain_length;
+            bool success = true;
 
-                if (datain_length>=d_Htotal){
-                    float min = datain[(peak_index + d_delay/2) % d_Htotal];
-                    if(d_avg_min==(float)INFINITY){
-                        d_avg_min = min;
-                    }
-                    else 
-                    {
-                        d_avg_min = d_avg_alpha*min + (1-d_avg_alpha)*d_avg_min;
-                    }
+            volk_32f_index_max_16u(&peak_index, &datain[0], d_datain_length); 
 
+            if (datain_length>=d_Htotal){
+                float min = datain[(peak_index + d_delay/2) % d_Htotal];
+                if(d_avg_min==(float)INFINITY){
+                    d_avg_min = min;
                 }
-
-                if (d_avg_max==-(float)INFINITY)
+                else 
                 {
-                    // I initialize the d_avg with the first value. 
-                    d_avg_max = datain[peak_index];
+                    d_avg_min = d_avg_alpha*min + (1-d_avg_alpha)*d_avg_min;
                 }
-                else if ( datain[ peak_index ] > d_avg_max - d_threshold_factor_rise*(d_avg_max-d_avg_min) ) 
-                {
-                    d_avg_max = d_avg_alpha * datain[ peak_index ] + (1 - d_avg_alpha) * d_avg_max;
-                }
-                else
-                {
-                    // if the peak is not large enough, we declare this a failure
-                    success = false; 
-                }
-
-                //printf("d_avg_max: %f\n",d_avg_max);
-                //printf("d_avg_min: %f\n",d_avg_min);
-                //printf("datain[%i]: %f\n",peak_index, datain[peak_index]);
-                //printf("sucess: %d\n",success);
-                
-                //We now check whether peaks are also present at multiples of d_delay. This may 
-                //happen with border that by chance are at the same distance as the d_delay. In this
-                //case we will ignore the result of this peak_process, as we don't know whether samples 
-                //were lost (and the line has actually changed). 
-                //for(int i=(peak_index % d_delay); i<datain_length; i=i+d_delay){
-                //    if((datain[ i ] > d_avg_max - d_threshold_factor_rise*(d_avg_max-d_avg_min)) && i!=peak_index  ){
-                //        // i.e. it could also be a peak according to our criteria, we thus declare this a failure
-                //        success = false;
-                //    }
-                //}
-
-
-                if (success){
-                    *peak_pos = peak_index;
-                }
-                return (success);
 
             }
 
-        int
-            Hsync_impl::max_corr_sync(const gr_complex * in, int lookup_start, int lookup_stop, int * max_corr_pos)
+            if (d_avg_max==-(float)INFINITY)
             {
+                // I initialize the d_avg with the first value. 
+                d_avg_max = datain[peak_index];
+            }
+            else if ( datain[ peak_index ] > d_avg_max - d_threshold_factor_rise*(d_avg_max-d_avg_min) ) 
+            {
+                d_avg_max = d_avg_alpha * datain[ peak_index ] + (1 - d_avg_alpha) * d_avg_max;
+            }
+            else
+            {
+                // if the peak is not large enough, we declare this a failure
+                success = false; 
+            }
 
-                assert(lookup_start >= lookup_stop);
-                //assert(lookup_stop >= (d_Htotal - 1));
+            if (success){
+                *peak_pos = peak_index;
+            }
+            return (success);
 
-                int size;
+        }
 
-                // I calculate the 1-sample correlation
-                size = lookup_start - lookup_stop;
-                //volk_32fc_x2_multiply_conjugate_32fc(&d_corr[0], &in[lookup_start], &in[lookup_start - d_delay], size);
-                volk_32fc_x2_multiply_conjugate_32fc(&d_corr[0], &in[lookup_stop+d_delay], &in[lookup_stop], size);
+        //---------------------------------------------------------
 
-                // I calculate its magnitude
-                size = lookup_start - lookup_stop;
-                volk_32fc_magnitude_32f(&d_abs_corr[0], &d_corr[0], size);
+        int Hsync_impl::max_corr_sync(const gr_complex * in, int lookup_start, int lookup_stop, int * max_corr_pos)
+        {
+            assert(lookup_start >= lookup_stop);
+            //assert(lookup_stop >= (d_Htotal - 1));
 
-                int peak = 0;
-                bool found_peak = true; 
+            int size;
 
-                // Find peaks of lambda
-                // We have found an end of symbol at peak_pos[0] + CP + FFT
-                if ((found_peak = peak_detect_process(&d_abs_corr[0], (lookup_start - lookup_stop), &peak)))
-                {
-                    *max_corr_pos = peak + lookup_stop;
-                }
-                
-                //found_peak = peak_detect_process(&d_abs_corr[0], (lookup_start - lookup_stop), &peak);
-                //*max_corr_pos = peak + lookup_stop;
+            // I calculate the 1-sample correlation
+            size = lookup_start - lookup_stop;
+            volk_32fc_x2_multiply_conjugate_32fc(&d_corr[0], &in[lookup_stop+d_delay], &in[lookup_stop], size);
 
-                
-                return (found_peak);
+            // I calculate its magnitude
+            size = lookup_start - lookup_stop;
+            volk_32fc_magnitude_32f(&d_abs_corr[0], &d_corr[0], size);
 
+            int peak = 0;
+            bool found_peak = true; 
 
-           }
+            // Find peaks of lambda
+            // We have found an end of symbol at peak_pos[0] + CP + FFT
+            if ((found_peak = peak_detect_process(&d_abs_corr[0], (lookup_start - lookup_stop), &peak)))
+            {
+                *max_corr_pos = peak + lookup_stop;
+            }
 
+            return (found_peak);
+        }
 
-        void
-            Hsync_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+        //---------------------------------------------------------
+
+        void Hsync_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
             {
                 int ninputs = ninput_items_required.size ();
                 // make sure we receive at least (d_delay + dHtotal + 1)
@@ -227,9 +216,9 @@ namespace gr {
                     //printf("ninput_items_required[%i]: %i\n",i,ninput_items_required[i]);      
                 }
             }
+        //---------------------------------------------------------
 
-        int
-            Hsync_impl::general_work (int noutput_items,
+        int Hsync_impl::general_work (int noutput_items,
                     gr_vector_int &ninput_items,
                     gr_vector_const_void_star &input_items,
                     gr_vector_void_star &output_items)
@@ -259,20 +248,13 @@ namespace gr {
                         d_line_found = max_corr_sync(&in[d_consumed], d_Htotal+d_delay, d_delay, &d_line_start);
                         d_line_locked = d_line_found; 
                         
-                        //printf("d_line_locked (no idea): %i\n",d_line_locked);
-                        //printf("d_line_start (no idea): %i\n",d_line_start);      
                     }
                     else
                     {
                         //If we are here it means that we are sure where the line is, and 
                         //now thus only search near it. 
-
                         
                         d_line_found = max_corr_sync(&in[d_consumed], d_line_start + d_shorter_range_size, std::max(d_line_start - d_shorter_range_size, 0), &d_line_start);
-                        if(!d_line_found){
-                        //printf("d_line_found (search near): %i\n",d_line_found);      
-                        //printf("d_line_start (search near): %i\n",d_line_start);      
-                        }
                         
                         if (d_line_found)
                         {
@@ -298,13 +280,9 @@ namespace gr {
                         }
                     }
 
-
                     memcpy(&out[line*d_Htotal], &in[d_consumed+d_line_start], d_Htotal*sizeof(gr_complex));
-
                     d_out = d_out + d_Htotal; 
-
                     d_consumed += std::max(d_line_start,1);
-                    //d_consumed += d_Htotal;
                 }
 
                 // Tell runtime system how many input items we consumed on

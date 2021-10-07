@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/*
+/**
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  *
@@ -20,8 +20,18 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
+ * 
+ * @file normalize_flow_impl.cc
  *
+ * gr-tempest
+ *
+ * @date May 26, 2020
+ * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -40,7 +50,9 @@ namespace gr {
       return gnuradio::get_initial_sptr
         (new normalize_flow_impl(min, max, window, alpha_avg, update_proba));
     }
-
+    /**********************************************************
+     * Function bodies
+     **********************************************************/
     /*
      * The private constructor
      */
@@ -64,11 +76,15 @@ namespace gr {
         d_proba_of_updating = update_proba;
     }
 
+    //---------------------------------------------------------
+
     void normalize_flow_impl::set_min_max(float min, float max){
         d_min = min; 
         d_max = max;
         printf("[TEMPEST] setting min and max to %f and %f in the normalize flow block.\n",min, max);
     }
+
+    //---------------------------------------------------------
 
     float normalize_flow_impl::compute_max(const float * datain, const int datain_length){
       uint16_t peak_index = 0;
@@ -79,12 +95,15 @@ namespace gr {
 
     }
 
+    //---------------------------------------------------------
     /*
      * Our virtual destructor.
      */
     normalize_flow_impl::~normalize_flow_impl()
     {
     }
+
+    //---------------------------------------------------------
 
     int
     normalize_flow_impl::work(int noutput_items,
@@ -93,8 +112,6 @@ namespace gr {
     {
       const float *in = (const float *) input_items[0];
       float *out = (float *) output_items[0];
-
-   
 
       if(d_dist(d_gen)<d_proba_of_updating){
           float max = compute_max(&in[0], noutput_items);
@@ -110,7 +127,6 @@ namespace gr {
       for (int i=0; i<noutput_items; i++){
           out[i] = (in[i]-d_current_min)/(d_current_max-d_current_min)*(d_max-d_min) + d_min; 
       }
-
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
