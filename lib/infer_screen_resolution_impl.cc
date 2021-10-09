@@ -1,7 +1,9 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2020
- *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+/**
+ * Copyright 2021
+ *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
+ *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
+ *    Victoria Severi   <maria.severi@fing.edu.uy>
  *
  *   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
  *   Universidad de la Republica, Uruguay.
@@ -21,7 +23,19 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  *
+ * @file infer_screen_resolution_impl.cc
+ * 
+ * gr-tempest
+ *
+ * @date October 6, 2021
+ * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * @author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -32,6 +46,10 @@
 #include <thread>
 #include <volk/volk.h>
 #include <math.h>
+
+/**********************************************************
+ * Constant and macro definitions
+ **********************************************************/
 
 #define MIN_FRAMERATE (55)
 #define MIN_HEIGHT (590)
@@ -50,7 +68,9 @@ namespace gr {
         (new infer_screen_resolution_impl(sample_rate, fft_size, refresh_rate));
     }
 
-
+    /**********************************************************
+     * Function bodies
+     **********************************************************/
     /*
      * The private constructor
      */
@@ -59,16 +79,16 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(float)),
               gr::io_signature::make(1, 1, sizeof(float)))
     {
-        //Received parameters
-
+      //Received parameters
       d_sample_rate = sample_rate;
       d_fft_size = fft_size;
       set_refresh_rate(refresh_rate);
 
+      //Search values
       d_search_margin = 10000;
       d_flag = false;
       
-      //Parameters to publish
+      //Resolution results
       d_Hvisible = 0;
       d_Vvisible = 0;
       d_Hsize = 0;
@@ -76,18 +96,15 @@ namespace gr {
 
       //Counters
       d_work_counter = 0;
-      /*
-      //PMT ports
-      message_port_register_out(pmt::mp("refresh_rate"));
-      message_port_register_out(pmt::mp("Vvisible"));
-      message_port_register_out(pmt::mp("Vsize"));
-      message_port_register_out(pmt::mp("Hvisible"));
-      message_port_register_out(pmt::mp("Hsize"));
-*/
+
       set_history(d_fft_size);
+
+      printf("[TEMPEST] Welcome to the Resolution Inference block. Please refer 
+        to the graphic on the Time Sink to find the peak and enter its approximate 
+        time value in microseconds.");
     }
     
-
+    //---------------------------------------------------------
     /*
      * Our virtual destructor.
      */
@@ -95,69 +112,27 @@ namespace gr {
     {
     }
 
-    void
-    infer_screen_resolution_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+    //---------------------------------------------------------
+
+    void infer_screen_resolution_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       ninput_items_required[0] = noutput_items;
     }
 
-    void 
-    infer_screen_resolution_impl::set_refresh_rate(int refresh_rate)
+    //---------------------------------------------------------
+
+    void infer_screen_resolution_impl::set_refresh_rate(int refresh_rate)
     {
-      // If the refresh rate's changed, I reset de parameters with refresh rate
-      
+      //If the refresh rate changed, parameters are reset with callback
       d_refresh_rate = refresh_rate;
-
       d_search_skip = d_sample_rate/(d_refresh_rate+0.2);
-
       d_refresh_rate_est=refresh_rate;
-	    
 	    printf("[TEMPEST] Setting refresh to %i in infer block.\n", refresh_rate);
-	}
-	
-    void
-    infer_screen_resolution_impl::publish_messages()
-    {
-      message_port_pub(
-                        pmt::mp("refresh_rate"), 
-                        pmt::cons(
-                          pmt::mp("refresh_rate"), 
-                          pmt::from_long(d_refresh_rate)
-                        )
-                      );             
-        
-      message_port_pub(
-                        pmt::mp("Vvisible"), 
-                        pmt::cons(
-                          pmt::mp("Vvisible"), 
-                          pmt::from_long(d_Vvisible)
-                        )
-                      );             
-      message_port_pub(
-                        pmt::mp("Vsize"), 
-                        pmt::cons(
-                          pmt::mp("Vzise"), 
-                          pmt::from_long(d_Vsize)
-                        )
-                      );
-      message_port_pub(
-                        pmt::mp("Hvisible"), 
-                        pmt::cons(
-                          pmt::mp("Hvisible"), 
-                          pmt::from_long(d_Hvisible)
-                        )
-                      );     
-      message_port_pub(
-                        pmt::mp("Hsize"), 
-                        pmt::cons(
-                          pmt::mp("Hsize"), 
-                          pmt::from_long(d_Hsize)
-                        )
-                      ); 
-    }
+	  }
 
-    int
-    infer_screen_resolution_impl::general_work (int noutput_items,
+    //---------------------------------------------------------
+
+    int infer_screen_resolution_impl::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
@@ -165,62 +140,57 @@ namespace gr {
       const float  *in = (const float  *) input_items[0];
       float  *out = (float  *) output_items[0];
 
-      // Do <+signal processing+>
-      d_work_counter++;                                                           /* Work iteration counter */
+      //Work iteration counter
+      d_work_counter++;                                                           
       
-
       /////////////////////////////
       //   REFRESH RATE SEARCH   //
       /////////////////////////////
 
       uint32_t peak_index = 0, yt_index = 0, yt_aux = 0;
 
-      volk_32f_index_max_32u(&peak_index, &in[d_search_skip], d_search_margin);   /* 'descartados' se elige para que de cerca del pico conocido */
+      volk_32f_index_max_32u(&peak_index, &in[d_search_skip], d_search_margin); 
 
-      peak_index += d_search_skip;                                                /* Offset por indice relativo en volk */
+      // Offset because of relative volk index:
+      peak_index += d_search_skip;                                                
 
       memcpy(out, in, noutput_items*sizeof(float));
 
-      /* Add Tag. */
+      // Add Tag to the peak:
       add_item_tag(0, nitems_written(0)+peak_index, pmt::mp("peak"), pmt::PMT_T);
 
       double fv = (double)d_sample_rate/(double)peak_index;
 
-      //d_refresh_rate = (long)fv;                        /* Intentar que varíe menos que fv */
-   	d_refresh_rate_est = ((long) round(fv * lowpasscoeff + (1.0 - lowpasscoeff) * (d_refresh_rate_est)));
+      // Lower the variation of the received refresh rate:
+   	  d_refresh_rate_est = ((long) round(fv * lowpasscoeff + (1.0 - lowpasscoeff) * (d_refresh_rate_est)));
    	
       /////////////////////////////
       //     HEIGHT SEARCH       //
       /////////////////////////////
 
-      int yt_largo = (int)d_sample_rate*(MAX_PERIOD);                               /* Elegido para asegurar que encuentre pico en cualquier res */
-      //int yt_largo=(int)d_sample_rate/(d_refresh_rate*d_Vsize);
+      int yt_largo = (int)d_sample_rate*(MAX_PERIOD);
 
-      volk_32f_index_max_32u(&yt_index, &in[peak_index+5], yt_largo);             /* Arranca en +5 para no contar el mismo pico */
+      volk_32f_index_max_32u(&yt_index, &in[peak_index+5], yt_largo);
+      // The peak search begins a few samples later to avoid repeating the previous result
 
-      //volk_32f_index_max_32u(&yt_index, &in[yt_aux+5], yt_largo);
-      //volk_32f_index_max_32u(&yt_aux, &in[peak_index+yt_index+5], yt_largo);  
+      double yt = (double)d_sample_rate / (double)((yt_index+5)*fv);
+      // The same sample movement is compensated
 
-      double yt = (double)d_sample_rate / (double)((yt_index+5)*fv);              /* El +5 compensa lo que se movio por el volk */
-	//double yt=1000;
-	//printf((yt < (d_Vsize+100) && yt>(d_Vsize-100)) ? "true" : "false");
-      //d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
       if (d_flag)  
       {
-	if (yt < 1225 && yt > 350)
-	{
-		d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
-		
-	}     
+      	if (yt < 1225 && yt > 350)
+      	{
+      		d_vtotal_est = ((int) round(yt * lowpasscoeff + (1.0 - lowpasscoeff) * (d_vtotal_est)));
+      	}     
       }
       else 
       {
-	if (yt < 1225 && yt > 350)
-	{
-		d_vtotal_est = yt;
-		d_flag = true;
+      	if (yt < 1225 && yt > 350)
+      	{
+      		d_vtotal_est = yt;
+      		d_flag = true;
 
-	}
+      	}
       }
 
       /////////////////////////////
@@ -228,6 +198,8 @@ namespace gr {
       /////////////////////////////
 
       if(d_work_counter >= 500)
+      // Results are printed every 500 iterations to maintain information updated
+      // withoud flooding the GRC terminal
       {
         search_table(d_refresh_rate_est);	
         publish_messages();
@@ -235,16 +207,15 @@ namespace gr {
         printf(" Hdisplay \t %ld \t Px \t\t Vdisplay \t %ld \t Px \t\t Hsize \t %ld \t Px \t\t Vsize \t %ld \t Px \t\t Refresh Rate \t %ld \t Hz \t \n ", d_Hvisible,d_Vvisible,d_Hsize,d_Vsize,d_refresh_rate);
 
         d_work_counter = 0;
-       } 
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each (noutput_items);
+      } 
 
-      // Tell runtime system how many output items we produced.
+      consume_each (noutput_items);
       return noutput_items;
     }
-    void
-    infer_screen_resolution_impl::search_table(double fv_estimated)
+    
+    //---------------------------------------------------------
+
+    void infer_screen_resolution_impl::search_table(double fv_estimated)
       {
       if (fv_estimated<65)
         {
@@ -394,8 +365,7 @@ namespace gr {
             d_Vsize=1066;
           }
         }
-       
-      }/*look at table*/
+      }
 
 
   } /* namespace tempest */

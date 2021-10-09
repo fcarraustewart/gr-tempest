@@ -1,7 +1,9 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2020
- *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+/**
+ * Copyright 2021
+ *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
+ *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
+ *    Victoria Severi   <maria.severi@fing.edu.uy>
  *
  *   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
  *   Universidad de la Republica, Uruguay.
@@ -20,11 +22,32 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
+ * 
+ * @file infer_screen_resolution_impl.h
+ * 
+ * @brief Block that searches for the autocorrelation peaks to
+ * infer the resolution information from the screen signal.
+ * The user is required to input the peak time to confirm
+ * refresh rate, so the screen sizes can be easily found.
  *
+ * gr-tempest
+ *
+ * @date October 6, 2021
+ * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * @author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
+
+/**********************************************************
+ * Constant and macro definitions
+ **********************************************************/
 
 #ifndef INCLUDED_TEMPEST_INFER_SCREEN_RESOLUTION_IMPL_H
 #define INCLUDED_TEMPEST_INFER_SCREEN_RESOLUTION_IMPL_H
+
+/**********************************************************
+ * Include statements
+ **********************************************************/
 
 #include <tempest/infer_screen_resolution.h>
 
@@ -39,6 +62,11 @@ namespace gr {
      public:
       infer_screen_resolution_impl(int sample_rate , int fft_size, float refresh_rate);
       ~infer_screen_resolution_impl();
+
+      /**********************************************************
+       * Data declarations
+       **********************************************************/
+
       //Received parameters
       int d_sample_rate;
       int d_fft_size;
@@ -51,10 +79,7 @@ namespace gr {
       long d_refresh_rate_est;
       bool d_flag;
 
-      //Results to publish
-      /*long d_refresh_rate;
-      long d_Hvisible;
-      long d_Vvisible;*/
+      //Resolution results
       long d_Hsize;
       long d_Vsize;
       long d_Vvisible;
@@ -63,19 +88,46 @@ namespace gr {
       //Counters
       uint32_t d_work_counter;
 
-      //Functions
-      void publish_messages();
+      /**********************************************************
+       * Public function prototypes
+       **********************************************************/
+      /**
+        * @brief Function that uses a lookup table to find the
+        * appropriate resolution based on the refresh rate and
+        * the estimated vertical total.
+        * 
+        * @param double fv_estimated: estimated refresh rate.
+        */
       void search_table(double fv_estimated);
-      
+      //---------------------------------------------------------   
+      /**
+        * @brief Callback function to set the search values when
+        * parameters are modified in runtime.
+        * 
+        * @param int refresh_rate: new value for the refresh
+        * rate parameter.
+        */
       void set_refresh_rate(int refresh_rate);
-      // Where all the action really happens
+      //---------------------------------------------------------      
+      /**
+        * @brief Used to establish the amount of samples required
+        * for a full work iteration.
+        */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-
+      //---------------------------------------------------------
+      /**
+        * @brief Searches first for the first peak, confirming the
+        * refresh rate input data, and then the second peak, to
+        * define the line time and thus find the vertical resolution.
+        * With those two values it searches the lookup table to 
+        * complete the resolution information. Results are printed
+        * in terminal once every few seconds.
+        */
       int general_work(int noutput_items,
            gr_vector_int &ninput_items,
            gr_vector_const_void_star &input_items,
            gr_vector_void_star &output_items);
-
+      //---------------------------------------------------------
     };
 
   } // namespace tempest
