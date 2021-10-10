@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2021
  *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
  *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
@@ -23,19 +23,19 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file infer_screen_resolution_impl.h
+ * \file infer_screen_resolution_impl.h
  * 
- * @brief Block that searches for the autocorrelation peaks to
+ * \brief Block that searches for the autocorrelation peaks to
  * infer the resolution information from the screen signal.
  * The user is required to input the peak time to confirm
  * refresh rate, so the screen sizes can be easily found.
  *
  * gr-tempest
  *
- * @date October 6, 2021
- * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
- * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
- * @author  Victoria Severi  <maria.severi@fing.edu.uy>
+ * \date October 6, 2021
+ * \author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * \author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * \author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
 
 /**********************************************************
@@ -91,32 +91,32 @@ namespace gr {
       /**********************************************************
        * Public function prototypes
        **********************************************************/
-      /**
-        * @brief Function that uses a lookup table to find the
+      /*!
+        * \brief Function that uses a lookup table to find the
         * appropriate resolution based on the refresh rate and
         * the estimated vertical total.
         * 
-        * @param double fv_estimated: estimated refresh rate.
+        * \param double fv_estimated: estimated refresh rate.
         */
       void search_table(double fv_estimated);
       //---------------------------------------------------------   
-      /**
-        * @brief Callback function to set the search values when
+      /*!
+        * \brief Callback function to set the search values when
         * parameters are modified in runtime.
         * 
-        * @param int refresh_rate: new value for the refresh
+        * \param int refresh_rate: new value for the refresh
         * rate parameter.
         */
       void set_refresh_rate(int refresh_rate);
       //---------------------------------------------------------      
-      /**
-        * @brief Used to establish the amount of samples required
+      /*!
+        * \brief Used to establish the amount of samples required
         * for a full work iteration.
         */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
       //---------------------------------------------------------
-      /**
-        * @brief Searches first for the first peak, confirming the
+      /*!
+        * \brief Searches first for the first peak, confirming the
         * refresh rate input data, and then the second peak, to
         * define the line time and thus find the vertical resolution.
         * With those two values it searches the lookup table to 

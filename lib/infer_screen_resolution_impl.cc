@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2021
  *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
  *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
@@ -23,14 +23,14 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  *
- * @file infer_screen_resolution_impl.cc
+ * \file infer_screen_resolution_impl.cc
  * 
  * gr-tempest
  *
- * @date October 6, 2021
- * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
- * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
- * @author  Victoria Severi  <maria.severi@fing.edu.uy>
+ * \date October 6, 2021
+ * \author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * \author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * \author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
 
 /**********************************************************

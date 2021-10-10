@@ -1,29 +1,21 @@
 id: tempest_infer_screen_resolution
-label: infer_screen_resolution
-category: '[tempest]'
-
+label: Resolution Inference
+category: '[Tempest]'
 templates:
   imports: import tempest
   make: tempest.infer_screen_resolution(${sample_rate}, ${fft_size}, ${refresh_rate})
-
   callbacks: 
   - set_refresh_rate(${refresh_rate})
-#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
-#     Keys include:
-#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
-#     * label (label shown in the GUI)
-#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:
 - id: sample_rate
-  label: Sample_rate
+  label: sample_rate
   dtype: int
 - id: fft_size
   label: fft_size
   dtype: int
 - id: refresh_rate
-  label: Refresh_rate
+  label: refresh_rate
   dtype: float
-
 inputs:
 - label: in
   domain: stream
@@ -32,6 +24,4 @@ outputs:
 - label: out
   domain: stream
   dtype: float
-
-file_format: 1
 file_format: 1
