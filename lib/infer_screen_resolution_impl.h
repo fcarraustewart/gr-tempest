@@ -45,6 +45,9 @@
 #ifndef INCLUDED_TEMPEST_INFER_SCREEN_RESOLUTION_IMPL_H
 #define INCLUDED_TEMPEST_INFER_SCREEN_RESOLUTION_IMPL_H
 
+#define lowpasscoeff 0.1
+#define MAX_PERIOD 0.0000284
+
 /**********************************************************
  * Include statements
  **********************************************************/
@@ -57,39 +60,33 @@ namespace gr {
     class infer_screen_resolution_impl : public infer_screen_resolution
     {
      private:
-      // Nothing to declare in this block.
-
-     public:
-      infer_screen_resolution_impl(int sample_rate , int fft_size, float refresh_rate);
-      ~infer_screen_resolution_impl();
-
       /**********************************************************
        * Data declarations
        **********************************************************/
 
       //Received parameters
-      int d_sample_rate;
+      float d_sample_rate;
       int d_fft_size;
-      long d_refresh_rate;
+      float d_refresh_rate;
 
       //Search values
       uint32_t d_search_skip;
       uint32_t d_search_margin;
       uint32_t d_vtotal_est;
-      long d_refresh_rate_est;
+      float d_refresh_rate_est;
       bool d_flag;
 
       //Resolution results
-      long d_Hsize;
-      long d_Vsize;
-      long d_Vvisible;
-      long d_Hvisible;
+      int d_Hsize;
+      int d_Vsize;
+      int d_Vvisible;
+      int d_Hvisible;
 
       //Counters
       uint32_t d_work_counter;
 
       /**********************************************************
-       * Public function prototypes
+       * Private function prototypes
        **********************************************************/
       /*!
         * \brief Function that uses a lookup table to find the
@@ -98,16 +95,24 @@ namespace gr {
         * 
         * \param double fv_estimated: estimated refresh rate.
         */
-      void search_table(double fv_estimated);
-      //---------------------------------------------------------   
+      void search_table(float fv_estimated);
+      //--------------------------------------------------------- 
+     
+     public:
+      infer_screen_resolution_impl(int sample_rate , int fft_size, float refresh_rate);
+      ~infer_screen_resolution_impl();
+
+      /**********************************************************
+       * Public function prototypes
+       **********************************************************/
       /*!
         * \brief Callback function to set the search values when
         * parameters are modified in runtime.
         * 
-        * \param int refresh_rate: new value for the refresh
+        * \param float refresh_rate: new value for the refresh
         * rate parameter.
         */
-      void set_refresh_rate(int refresh_rate);
+      void set_refresh_rate(float refresh_rate);
       //---------------------------------------------------------      
       /*!
         * \brief Used to establish the amount of samples required

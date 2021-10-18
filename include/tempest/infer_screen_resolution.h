@@ -52,7 +52,7 @@ namespace gr {
        */
       static sptr make(int sample_rate , int fft_size, float refresh_rate);
       
-      virtual void set_refresh_rate(int refresh_rate) = 0;
+      virtual void set_refresh_rate(float refresh_rate) = 0;
     };
 
   } // namespace tempest

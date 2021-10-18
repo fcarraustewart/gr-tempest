@@ -262,7 +262,7 @@ blocks:
     bus_structure: null
     coordinate: [660, 248]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -377,15 +377,35 @@ blocks:
     bus_structure: null
     coordinate: [661, 169]
     rotation: 0
+    state: disabled
+- name: tempest_screen_resolution_inference_0
+  id: tempest_screen_resolution_inference
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_size
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    refresh_rate: refresh_rate
+    sample_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [643, 358]
+    rotation: 0
     state: true
 
 connections:
 - [Autocorrelation_0, '0', qtgui_time_sink_x_0, '0']
 - [Autocorrelation_0, '0', tempest_infer_screen_resolution_0, '0']
+- [Autocorrelation_0, '0', tempest_screen_resolution_inference_0, '0']
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_throttle_0, '0', Autocorrelation_0, '0']
 - [tempest_infer_screen_resolution_0, '0', blocks_null_sink_0, '0']
 - [tempest_infer_screen_resolution_0, '0', qtgui_time_sink_x_0_0, '0']
+- [tempest_screen_resolution_inference_0, '0', blocks_null_sink_0, '0']
 
 metadata:
   file_format: 1
