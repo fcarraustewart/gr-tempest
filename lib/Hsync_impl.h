@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  *
@@ -21,16 +21,16 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file Hsync_impl.h
+ * \file Hsync_impl.h
  * 
- * @brief Block that receives a signal with corrected sampling,
+ * \brief Block that receives a signal with corrected sampling,
  * calculates autocorrelation with the delayed signal and
  * returns the screen image centered horizontally.
  *
- * gr-tempest
+ * \ingroup tempest
  *
- * @date May 16, 2020
- * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * \date May 16, 2020
+ * \author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
 
 /**********************************************************
@@ -88,25 +88,25 @@ namespace gr {
        * Private function prototypes
        **********************************************************/
 
-      /**
-       * @brief Initializes the parameters used in the peak_detect_process. 
+      /*!
+       * \brief Initializes the parameters used in the peak_detect_process. 
        *
-       * @param threshold_factor_rise The algorithm keeps an average of 
+       * \param threshold_factor_rise The algorithm keeps an average of 
        * minimum and maximum value. A peak is considered valid when 
        * it's bigger than avg_max - threshold_factor_rise(avg_max-avg_min). 
-       * @param alpha The parameter used to update both the average maximum 
+       * \param alpha The parameter used to update both the average maximum 
        * and minimum (exponential filter, or single-root iir). 
        *
        */ 
       void peak_detect_init(float threshold_factor_rise, float alpha);
       //---------------------------------------------------------
-      /**
+      /*!
        * @brief Given datain and its length, the method return the peak position 
        */ 
       int peak_detect_process(const float * datain, const int datain_length, int * peak_pos);
       //---------------------------------------------------------
-      /**
-       * @brief Calculates the conjugate multipliplication of the 
+      /*!
+       * \brief Calculates the conjugate multipliplication of the 
        * signal and its delayed version, and outputs the position 
        * of its absolute maximum. Given the input, it calculates 
        * the resulting likelihood function between indices lookup_
@@ -128,14 +128,14 @@ namespace gr {
       public:
       Hsync_impl(int Htotal, int delay);
       ~Hsync_impl();
-      /**
-        * @brief Used to establish the amount of samples required
+      /*!
+        * \brief Used to establish the amount of samples required
         * for a full work iteration.
         */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
       //---------------------------------------------------------
-      /**
-        * @brief Work function searches for the horizontal position
+      /*!
+        * \brief Work function searches for the horizontal position
         * of the vertical white lines to begin display from that
         * point. Two searches are carried out: a first one with a
         * wider correlation margin (if the location of the line is 
@@ -149,8 +149,8 @@ namespace gr {
            gr_vector_const_void_star &input_items,
            gr_vector_void_star &output_items);
       //---------------------------------------------------------
-      /**
-        * @brief Initializes variables used for horizontal length
+      /*!
+        * \brief Initializes variables used for horizontal length
         * and delay. Operates with callback to allow changes during
         * execution.
         *  

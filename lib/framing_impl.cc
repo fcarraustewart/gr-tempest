@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  * 
@@ -21,12 +21,12 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file framing_impl.cc
+ * \file framing_impl.cc
  *
  * gr-tempest
  *
- * @date May 16, 2020
- * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * \date May 16, 2020
+ * \author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
 
 /**********************************************************
@@ -139,7 +139,6 @@ namespace gr {
                 // these are lines correspoding to an input
                 d_consumed += d_Htotal;
             }
-            //printf("line: %i, d_current_line: %i, d_Vdisplay: %i, d_Hdisplay: %i, d_Htotal, %i, d_consumed: %i, noutput_items: %i, d_out: %i\n", line, d_current_line, d_Vdisplay, d_Hdisplay, d_Htotal, d_consumed, noutput_items, d_out);
 
             d_current_line = (d_current_line+1)%std::max(d_Vdisplay,d_Vtotal);
         }

@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2021
  *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
  *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
@@ -28,21 +28,21 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file sync_detector_impl.h
+ * \file sync_detector_impl.h
  * 
- * @brief Block ment to sustitute Hsync in the detection of
+ * \brief Block ment to sustitute Hsync in the detection of
  * syncronization of an image with already corrected sampling.
  * The average value of both the horizontal and vertical lines
  * of a frame are used in order to detect the location of the 
  * blankings, and display the samples with the appropriate
  * delay to synchronize them with the margins.
  *
- * gr-tempest
+ * \ingroup tempest
  *
- * @date May 3, 2021
- * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
- * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
- * @author  Victoria Severi  <maria.severi@fing.edu.uy>
+ * \date May 3, 2021
+ * \author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * \author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * \author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
 
 /**********************************************************
@@ -108,59 +108,59 @@ namespace gr {
        * Private function prototypes
        **********************************************************/
       
-      /**
-        * @brief Function that takes a full line (either horizontal 
+      /*!
+        * \brief Function that takes a full line (either horizontal 
         * or vertical) and a fixed blanking size to calculate the 
         * medium energy difference between blanking and screen (beta)
         * for each possible blanking position. Returns the position 
         * that granted the best beta and the value of beta itself.
         * 
-        * @param const float *data: array contaning the average
+        * \param const float *data: array contaning the average
         * magnitudes of either the horizontal or vertical lines.
-        * @param const int total_line_size: data array size.
-        * @param const double total_sum: sum of all array data.
-        * @param const int blanking_size: current estimation of
+        * \param const int total_line_size: data array size.
+        * \param const double total_sum: sum of all array data.
+        * \param const int blanking_size: current estimation of
         * the blanking size (horizontal or vertical, according
         * to the data input).
-        * @param double *beta: location to store the resulting 
+        * \param double *beta: location to store the resulting 
         * beta value.
-        * @param int *beta_index: location to store the resulting
+        * \param int *beta_index: location to store the resulting
         * beta index.
         */
       void find_best_beta (const float *data, const int total_line_size, const double total_sum, const int blanking_size, double *beta, int *beta_index);
       //---------------------------------------------------------
-      /**
-        * @brief Function that takes the line and runs find_best_
+      /*!
+        * \brief Function that takes the line and runs find_best_
         * beta for some possible blanking sizes. Then takes the 
         * best location (and size) returned and defines the new 
         * position for shifting using both the new calculation and
         * the previous information to prevent sudden big changes.
         * 
-        * @param int *blanking_index: location of the resulting
+        * \param int *blanking_index: location of the resulting
         * index for the center of the corresponding blanking.
-        * @param int *blanking_size: size found for the blanking
+        * \param int *blanking_size: size found for the blanking
         * and used in its calculation.
-        * @param float *data: array contaning the average
+        * \param float *data: array contaning the average
         * magnitudes of either the horizontal or vertical lines.
-        * @param const int total_line_size: data array size.
-        * @param int min_blanking_size: minimum blanking allowed
+        * \param const int total_line_size: data array size.
+        * \param int min_blanking_size: minimum blanking allowed
         * to try by the function.
-        * @param double lowpasscoeff: coefficient used to affect
+        * \param double lowpasscoeff: coefficient used to affect
         * the set of previous results by each new one.
         */
       void find_shift (int *blanking_index, int *blanking_size, float *data, const int total_line_size, int min_blanking_size, double lowpasscoeff);
       //---------------------------------------------------------
-      /**
-        * @brief Marinov's gaussian blur application for a 
+      /*!
+        * \brief Marinov's gaussian blur application for a 
         * fixed-size array.
         *  
-        * @param float * data: array of data to blur.
-        * @param int size: size of data array.
+        * \param float * data: array of data to blur.
+        * \param int size: size of data array.
         */
       void gaussianblur(float * data, int size);
       //---------------------------------------------------------
-      /**
-        * @brief Calculation of the gaussian coefficient.
+      /*!
+        * \@brief Calculation of the gaussian coefficient.
         *  
         */
       float calculate_gauss_coeff(float N, float i);
@@ -173,14 +173,14 @@ namespace gr {
       public:
       sync_detector_impl(int hscreen, int vscreen, int hblanking, int vblanking);
       ~sync_detector_impl();
-      /**
-        * @brief Used to establish the amount of samples required
+      /*!
+        * \brief Used to establish the amount of samples required
         * for a full work iteration.
         */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
       //---------------------------------------------------------
-      /**
-        * @brief Function working similarly to a state machine,
+      /*!
+        * \brief Function working similarly to a state machine,
         * where the data input (received in horizontal lines) is
         * being used for both calculating the averages needed by
         * the functions, and maintaining the proper delays given

@@ -1,10 +1,12 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020
- *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
- *
- *   Instituto de Ingenieria Electrica, Facultad de Ingenieria,
- *   Universidad de la Republica, Uruguay.
+ * Copyright 2021
+ *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
+ *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
+ *    Victoria Severi   <maria.severi@fing.edu.uy>
+ *    
+ *    Instituto de Ingeniería Eléctrica, Facultad de Ingeniería,
+ *    Universidad de la República, Uruguay.
  *  
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,24 +34,11 @@
 namespace gr {
   namespace tempest {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup tempest
-     *
-     */
     class TEMPEST_API sync_detector : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<sync_detector> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of tempest::sync_detector.
-       *
-       * To avoid accidental use of raw pointers, tempest::sync_detector's
-       * constructor is in a private implementation
-       * class. tempest::sync_detector::make is the public interface for
-       * creating new instances.
-       */
       static sptr make(int hscreen, int vscreen, int hblanking, int vblanking);
     };
 

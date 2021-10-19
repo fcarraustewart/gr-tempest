@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  * 
@@ -21,12 +21,12 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file Hsync_impl.cc
+ * \file Hsync_impl.cc
  *
  * gr-tempest
  *
- * @date May 16, 2020
- * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * \date May 16, 2020
+ * \author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
 
 /**********************************************************

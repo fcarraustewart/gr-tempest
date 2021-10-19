@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  * 
@@ -21,16 +21,16 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file framing_impl.h
+ * \file framing_impl.h
  * 
- * @brief Block that determines output per line according to 
+ * \brief Block that determines output per line according to 
  * the line count made in reference to the vertical display
  * size.
  *
- * gr-tempest
+ * \ingroup tempest
  *
- * @date May 16, 2020
- * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * \date May 16, 2020
+ * \author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
 
 /**********************************************************
@@ -71,22 +71,22 @@ namespace gr {
       public:
       framing_impl(int Htotal, int Vtotal, int Hdisplay, int Vdisplay);
       ~framing_impl();
-      /**
-        * @brief Initializes variables used for horizontal and 
+      /*!
+        * \brief Initializes variables used for horizontal and 
         * vertical length. Operates with callback to allow changes 
         * during execution.
         *  
         */
       void set_Htotal_and_Vtotal(int Htotal, int Vtotal);
       //---------------------------------------------------------
-      /**
-        * @brief Used to establish the amount of samples required
+      /*!
+        * \brief Used to establish the amount of samples required
         * for a full work iteration.
         */
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
       //---------------------------------------------------------
-      /**
-        * @brief Receives samples in horizontal lines and counts
+      /*!
+        * \brief Receives samples in horizontal lines and counts
         * them. Up until the vertical display size, lines are
         * either copied in the output if they are within the
         * total vertical size, or else replaced by zeros.

@@ -32,24 +32,11 @@
 namespace gr {
   namespace tempest {
 
-    /*!
-     * \brief Normalizes a flow between min and max. To be less CPU-intensive, it randomly chooses when to update the signal's maximum.
-     * \ingroup tempest
-     *
-     */
     class TEMPEST_API normalize_flow : virtual public gr::sync_block
     {
      public:
       typedef boost::shared_ptr<normalize_flow> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of tempest::normalize_flow.
-       *
-       * To avoid accidental use of raw pointers, tempest::normalize_flow's
-       * constructor is in a private implementation
-       * class. tempest::normalize_flow::make is the public interface for
-       * creating new instances.
-       */
       static sptr make(float min, float max, int window, float alpha_avg, float update_proba);
       
       virtual void set_min_max(float min, float max) = 0;

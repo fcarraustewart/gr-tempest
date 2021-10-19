@@ -33,24 +33,11 @@
 namespace gr {
   namespace tempest {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup tempest
-     *
-     */
     class TEMPEST_API framing : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<framing> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of tempest::framing.
-       *
-       * To avoid accidental use of raw pointers, tempest::framing's
-       * constructor is in a private implementation
-       * class. tempest::framing::make is the public interface for
-       * creating new instances.
-       */
       static sptr make(int Htotal, int Vtotal, int Hdisplay, int Vdisplay);
       
       virtual void set_Htotal_and_Vtotal(int Htotal, int Vtotal) = 0;

@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2021
  *    Pablo Bertrand    <pablo.bertrand@fing.edu.uy>
  *    Felipe Carrau     <felipe.carrau@fing.edu.uy>
@@ -28,14 +28,14 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file sync_detector_impl.cc
+ * \@file sync_detector_impl.cc
  *
  * gr-tempest
  *
- * @date May 3, 2021
- * @author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
- * @author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
- * @author  Victoria Severi  <maria.severi@fing.edu.uy>
+ * \date May 3, 2021
+ * \author  Pablo Bertrand   <pablo.bertrand@fing.edu.uy>
+ * \author  Felipe Carrau    <felipe.carrau@fing.edu.uy>
+ * \author  Victoria Severi  <maria.severi@fing.edu.uy>
  */
 
 /**********************************************************

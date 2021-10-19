@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/**
+/*!
  * Copyright 2020
  *   Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  *
@@ -21,15 +21,15 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  * 
- * @file normalize_flow_impl.h
+ * \file normalize_flow_impl.h
  * 
- * @brief Block that takes max and min values and uses them
+ * \brief Block that takes max and min values and uses them
  * to normalize the modules of incoming samples.
  *
- * gr-tempest
+ * \ingroup tempest
  *
- * @date May 26, 2020
- * @author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
+ * \date May 26, 2020
+ * \author Federico "Larroca" La Rocca <flarroca@fing.edu.uy>
  */
 
 /**********************************************************
@@ -77,12 +77,12 @@ namespace gr {
        * Private function prototypes
        **********************************************************/
       
-      /**
-        * @brief Receives an array of floats, looks for the index
+      /*!
+        * \brief Receives an array of floats, looks for the index
         * of the maximum value and returns the value itself.
         * 
-        * @param const float *datain: contains the array of data.
-        * @param const int datain_length: establishes array length.
+        * \param const float *datain: contains the array of data.
+        * \param const int datain_length: establishes array length.
         */
       float compute_max(const float * datain, const int datain_length);
       //---------------------------------------------------------
@@ -94,8 +94,8 @@ namespace gr {
       public:
       normalize_flow_impl(float min, float max, int window, float alpha_avg, float update_proba);
       ~normalize_flow_impl();
-      /**
-        * @brief Randomly uses the noutput_items received to update
+      /*!
+        * \brief Randomly uses the noutput_items received to update
         * the maximum and minimum values. In every iteration, all
         * samples are normalized according to an ecuation that uses
         * both mentioned values.
@@ -105,13 +105,13 @@ namespace gr {
          gr_vector_const_void_star &input_items,
          gr_vector_void_star &output_items);
       //---------------------------------------------------------
-      /**
-        * @brief Initializes variables used for min and max in the
+      /*!
+        * \brief Initializes variables used for min and max in the
         * normalization process. Operates with callback to allow
         * changes during execution.
         *  
-        * @param float min: variable used for minimum.
-        * @param float max: variable used for maximum.
+        * \param float min: variable used for minimum.
+        * \param float max: variable used for maximum.
         */
       void set_min_max(float min, float max);
       //---------------------------------------------------------

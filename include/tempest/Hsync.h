@@ -32,24 +32,11 @@
 namespace gr {
   namespace tempest {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup tempest
-     *
-     */
     class TEMPEST_API Hsync : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<Hsync> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of tempest::Hsync.
-       *
-       * To avoid accidental use of raw pointers, tempest::Hsync's
-       * constructor is in a private implementation
-       * class. tempest::Hsync::make is the public interface for
-       * creating new instances.
-       */
       static sptr make(int Htotal, int delay);
       
       virtual void set_Htotal_and_delay(int Htotal, int delay) = 0;
