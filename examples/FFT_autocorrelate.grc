@@ -102,7 +102,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [702, 272]
+    coordinate: [627, 233]
     rotation: 0
     state: true
 - name: blocks_nlog10_ff_1
@@ -120,7 +120,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [751, 446]
+    coordinate: [872, 117]
     rotation: 0
     state: true
 - name: blocks_selector_0
@@ -143,7 +143,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [218, 355]
+    coordinate: [338, 94]
     rotation: 0
     state: true
 - name: blocks_stream_to_vector_0
@@ -161,7 +161,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [313, 283]
+    coordinate: [379, 197]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0
@@ -179,7 +179,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [967, 367]
+    coordinate: [884, 211]
     rotation: 0
     state: true
 - name: fft_size
@@ -217,7 +217,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [470, 123]
+    coordinate: [360, 244]
     rotation: 0
     state: enabled
 - name: fft_vxx_1
@@ -238,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [702, 151]
+    coordinate: [622, 130]
     rotation: 0
     state: enabled
 - name: import_0
@@ -269,7 +269,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [973, 214]
+    coordinate: [1064, 321]
     rotation: 0
     state: true
 - name: pad_source_0
@@ -327,7 +327,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [683, 362]
+    coordinate: [629, 283]
     rotation: 0
     state: true
 

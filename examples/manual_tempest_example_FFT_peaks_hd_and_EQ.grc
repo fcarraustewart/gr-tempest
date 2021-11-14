@@ -616,7 +616,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [242, 1191]
+    coordinate: [348, 995]
     rotation: 270
     state: enabled
 - name: Keep_1_in_N_Frames_0
@@ -655,7 +655,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [937, 705]
+    coordinate: [1035, 635]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_arg_0
@@ -671,7 +671,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1059, 396]
+    coordinate: [765, 314]
     rotation: 0
     state: disabled
 - name: blocks_complex_to_mag_0
@@ -687,7 +687,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1174, 908]
+    coordinate: [1268, 835]
     rotation: 0
     state: disabled
 - name: blocks_complex_to_real_0
@@ -703,8 +703,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 637]
-    rotation: 0
+    coordinate: [1412, 731]
+    rotation: 270
     state: enabled
 - name: blocks_delay_0
   id: blocks_delay
@@ -722,7 +722,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [820, 680]
+    coordinate: [923, 597]
     rotation: 0
     state: enabled
 - name: blocks_delay_0_0
@@ -741,7 +741,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [937, 906]
+    coordinate: [1031, 833]
     rotation: 0
     state: disabled
 - name: blocks_delay_1
@@ -760,7 +760,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [603, 554]
+    coordinate: [474, 550]
     rotation: 90
     state: disabled
 - name: blocks_file_source_0
@@ -815,7 +815,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 374]
+    coordinate: [447, 370]
     rotation: 90
     state: disabled
 - name: blocks_multiply_xx_0_0
@@ -833,7 +833,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1239, 688]
+    coordinate: [1306, 601]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0
@@ -884,7 +884,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [522, 630]
+    coordinate: [569, 577]
     rotation: 0
     state: enabled
 - name: interp_fir_filter_xxx_1_0
@@ -903,7 +903,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [485, 886]
+    coordinate: [579, 813]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -1000,7 +1000,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1341, 496]
+    coordinate: [1047, 414]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_1
@@ -1097,7 +1097,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [573, 1094]
+    coordinate: [566, 874]
     rotation: 90
     state: enabled
 - name: ratio_finder_toggle_on_and_off
@@ -1115,7 +1115,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 1283]
+    coordinate: [650, 1087]
     rotation: 180
     state: enabled
 - name: single_pole_iir_filter_xx_0
@@ -1133,7 +1133,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [850, 392]
+    coordinate: [556, 310]
     rotation: 0
     state: disabled
 - name: tab_m
@@ -1188,7 +1188,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [326, 1149]
+    coordinate: [432, 953]
     rotation: 90
     state: enabled
 - name: tempest_fine_sampling_synchronization_0
@@ -1208,7 +1208,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [645, 791]
+    coordinate: [739, 718]
     rotation: 0
     state: disabled
 - name: tempest_normalize_flow_0
@@ -1247,7 +1247,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [772, 590]
+    coordinate: [777, 577]
     rotation: 0
     state: enabled
 - name: tempest_sync_detector_0_0
@@ -1266,7 +1266,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [692, 885]
+    coordinate: [786, 812]
     rotation: 0
     state: disabled
 - name: uhd_usrp_source_0
