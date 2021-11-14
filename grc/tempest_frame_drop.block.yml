@@ -1,18 +1,16 @@
-id: tempest_fine_sampling_synchronization
-label: Fine sampling synchronization
+id: tempest_frame_drop
+label: Frame Dropper
 category: '[Tempest]'
 templates:
   imports: import tempest
-  make: tempest.fine_sampling_synchronization(${Htotal}, ${Vtotal}, ${correct_sampling},
-    ${max_deviation}, ${update_proba})
-  callbacks: 
-  - set_Htotal_Vtotal(${Htotal}, ${Vtotal})
+  make: tempest.frame_drop(${Htotal}, ${Vtotal}, ${correct_sampling}, ${max_deviation},
+    ${update_proba}, ${actual_samp_rate})
 parameters:
 - id: Htotal
-  label: Horizontal px
+  label: Horizontal total
   dtype: int
 - id: Vtotal
-  label: Vertical px
+  label: Vertical total
   dtype: int
 - id: correct_sampling
   label: Correct sampling?
@@ -21,24 +19,32 @@ parameters:
   options: [1, 0]
   option_labels: ['Yes', 'No']
 - id: max_deviation
-  label: Max. deviation (%)
+  label: Max. deviation
   dtype: float
 - id: update_proba
-  label: Update proba.
+  label: Update prob.
   dtype: float
+- id: actual_samp_rate
+  label: Samp rate
+  dtype: real
 inputs:
 - label: in
   domain: stream
   dtype: complex
-- label: ratio
+- label: en
   domain: message
   optional: true
-- label: en
+- label: smpl
+  domain: message
+  optional: true
+- label: ratio
   domain: message
   optional: true
 outputs:
 - label: out
   domain: stream
   dtype: complex
-
+- label: ratio
+  domain: message
+  optional: true
 file_format: 1

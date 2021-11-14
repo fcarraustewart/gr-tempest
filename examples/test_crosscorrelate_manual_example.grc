@@ -10,7 +10,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: semi_automatic_tempest_example
+    id: manual_tempest_example
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -27,44 +27,11 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 8]
+    coordinate: [22, 15]
     rotation: 0
     state: enabled
 
 blocks:
-- name: Hblank
-  id: variable
-  parameters:
-    comment: ''
-    value: Hsize-Hvisible
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [432, 28]
-    rotation: 0
-    state: enabled
-- name: Hcorrection
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 1,0,1,1
-    label: Horizontal correction
-    min_len: '200'
-    orient: Qt.Horizontal
-    rangeType: int
-    start: '-20'
-    step: '1'
-    stop: '20'
-    value: '0'
-    widget: counter
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1008, 92]
-    rotation: 0
-    state: enabled
 - name: Hdisplay
   id: variable
   parameters:
@@ -74,99 +41,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1184, 28]
+    coordinate: [16, 76]
     rotation: 0
     state: enabled
 - name: Hsize
-  id: variable
-  parameters:
-    comment: ''
-    value: Hsizes[mode]
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [512, 28]
-    rotation: 0
-    state: enabled
-- name: Hsizes
-  id: variable
-  parameters:
-    comment: ''
-    value: '[832, 936, 800, 848, 832, 840, 832, 976, 992, 1008, 1008, 1024, 1024,
-      1056, 1040, 1056, 1048, 1072, 1312, 1264, 1344, 1328, 1312, 1376, 1392, 1408,
-      1520, 1600, 1552, 1568, 1680, 1680, 1800, 1728, 1728, 1760, 1688, 1688, 1728,
-      1760, 1776, 1800, 1880, 1896, 1896, 1912, 1928, 1904, 1936, 2144, 2160, 2176,
-      2192, 2144, 2176, 2096, 2176, 2160, 2160, 2160, 2160, 2160, 2208, 1840, 2240,
-      2256, 2448, 2456, 2528, 2560, 2576, 2608, 2592, 2624, 2600, 2640, 2048, 2044,
-      2800]'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [576, 164]
-    rotation: 0
-    state: enabled
-- name: Hvisible
-  id: variable
-  parameters:
-    comment: ''
-    value: Hvisibles[mode]
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [608, 28]
-    rotation: 0
-    state: enabled
-- name: Hvisibles
-  id: variable
-  parameters:
-    comment: ''
-    value: '[640, 720, 640, 640, 640, 640, 640, 768, 768, 768, 768, 768, 800, 800,
-      800, 800, 800, 800, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1152, 1152,
-      1152, 1152, 1280, 1280, 1280, 1280, 1280, 1280, 1280, 1280, 1280, 1280, 1280,
-      1368, 1400, 1400, 1400, 1400, 1400, 1440, 1440, 1600, 1600, 1600, 1600, 1600,
-      1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600, 1680, 1680, 1680, 1792,
-      1792, 1856, 1856, 1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920, 2048]'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [256, 228]
-    rotation: 0
-    state: enabled
-- name: Vblank
-  id: variable
-  parameters:
-    comment: ''
-    value: Vsize-Vvisible
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [432, 92]
-    rotation: 0
-    state: enabled
-- name: Vcorrection
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 1,1,1,1
-    label: Vertical correction
+    gui_hint: 0, 0, 1,1
+    label: Horizontal resolution (total)
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: int
-    start: '-20'
+    start: '0'
     step: '1'
-    stop: '20'
-    value: '0'
+    stop: int(4096*1.5)
+    value: '1344'
     widget: counter
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 236]
+    coordinate: [592, 14]
     rotation: 0
     state: enabled
 - name: Vdisplay
@@ -178,72 +74,47 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1184, 92]
+    coordinate: [110, 77]
     rotation: 0
     state: enabled
 - name: Vsize
-  id: variable
+  id: variable_qtgui_range
   parameters:
     comment: ''
-    value: Vsizes[mode]+Vcorrection
+    gui_hint: 0, 1, 1,1
+    label: Vertical resolution (total)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: int(2160*1.5)
+    value: '806'
+    widget: counter
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 92]
+    coordinate: [878, 14]
     rotation: 0
     state: enabled
-- name: Vsizes
+- name: fft_size
   id: variable
   parameters:
     comment: ''
-    value: '[445, 446, 525, 509, 520, 500, 509, 597, 601, 602, 605, 611, 625, 628,
-      666, 625, 631, 636, 622, 817, 806, 806, 800, 808, 814, 823, 895, 900, 907, 915,
-      795, 828, 1000, 1002, 1011, 1017, 1066, 1066, 1072, 1085, 1097, 795, 1082, 1094,
-      1096, 1103, 1112, 932, 1087, 1035, 1044, 1050, 1059, 1060, 1069, 1070, 1075,
-      1250, 1250, 1250, 1250, 1250, 1271, 1080, 1089, 1087, 1394, 1417, 1439, 1500,
-      1125, 1126, 1242, 1253, 1500, 1500, 2434, 2434, 1589]'
+    value: '4096'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 228]
+    coordinate: [137, 404]
     rotation: 0
-    state: enabled
-- name: Vvisible
-  id: variable
-  parameters:
-    comment: ''
-    value: Vvisibles[mode]
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [608, 92]
-    rotation: 0
-    state: enabled
-- name: Vvisibles
-  id: variable
-  parameters:
-    comment: ''
-    value: '[400, 400, 480, 480, 480, 480, 480, 576, 576, 576, 576, 576, 600, 600,
-      600, 600, 600, 600, 600, 768, 768, 768, 768, 768, 768, 768, 864, 864, 864, 864,
-      768, 800, 960, 960, 960, 960, 1024, 1024, 1024, 1024, 1024, 768 , 1050, 1050,
-      1050, 1050, 1050, 900 , 1050, 1000, 1000, 1000, 1000, 1024, 1024, 1024, 1024,
-      1200, 1200, 1200, 1200, 1200, 1200, 1050, 1050, 1050, 1344, 1344, 1392, 1392,
-      1080, 1080, 1200, 1200, 1440, 1440, 2400, 2400, 1536] '
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [416, 228]
-    rotation: 0
-    state: enabled
+    state: true
 - name: harmonic
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: ''
+    gui_hint: 3,1,1,1
     label: Harmonic
     min_len: '200'
     orient: Qt.Horizontal
@@ -251,20 +122,20 @@ blocks:
     start: '1'
     step: '1'
     stop: '10'
-    value: '1'
+    value: '3'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 164]
+    coordinate: [1028, 14]
     rotation: 0
     state: enabled
 - name: horizontal_offset
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 2,0,1,1
+    gui_hint: 1,0,1,2
     label: Horizontal offset
     min_len: '200'
     orient: Qt.Horizontal
@@ -278,55 +149,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 156]
+    coordinate: [1139, 14]
     rotation: 0
     state: enabled
 - name: interpolatedHsize
   id: variable
   parameters:
     comment: ''
-    value: int(Hsize/float(px_rate)*samp_rate)+Hcorrection
+    value: int(Hsize/float(px_rate)*samp_rate)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 20]
-    rotation: 0
-    state: enabled
-- name: inverted
-  id: variable_qtgui_chooser
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: Inverted colors?
-    label0: 'Yes'
-    label1: 'No'
-    label2: ''
-    label3: ''
-    label4: ''
-    labels: '[]'
-    num_opts: '2'
-    option1: '1'
-    option2: '2'
-    option3: '3'
-    option4: '4'
-    options: '[0, 1, 2]'
-    orient: Qt.QHBoxLayout
-    type: real
-    value: '1'
-    widget: radio_buttons
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [720, 4]
+    coordinate: [323, 16]
     rotation: 0
     state: enabled
 - name: lines_offset
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 2,1,1,1
+    gui_hint: 2,0,1,2
     label: Vertical offset
     min_len: '200'
     orient: Qt.Horizontal
@@ -340,70 +182,42 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 28]
+    coordinate: [751, 13]
     rotation: 0
     state: enabled
-- name: mode
-  id: variable_qtgui_chooser
+- name: offset
+  id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 0,0,1,2
-    label: Display's resolution
-    label0: ''
-    label1: ''
-    label2: ''
-    label3: ''
-    label4: ''
-    labels: modes
-    num_opts: '0'
-    option1: '1'
-    option2: '2'
-    option3: '3'
-    option4: '4'
-    options: range(len(modes))
-    orient: Qt.QVBoxLayout
-    type: int
-    value: '20'
-    widget: combo_box
+    gui_hint: 4,0,1,1
+    label: ''
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: 1024*2
+    value: '50'
+    widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 84]
+    coordinate: [113, 542]
     rotation: 0
-    state: enabled
-- name: modes
+    state: true
+- name: offset___9
   id: variable
   parameters:
     comment: ''
-    value: '["640x400 @ 85Hz", "720x400 @ 85Hz", "640x480 @ 60Hz", "640x480 @ 100Hz",
-      "640x480 @ 72Hz", "640x480 @ 75Hz", "640x480 @ 85Hz", "768x576 @ 60 Hz", "768x576
-      @ 72 Hz", "768x576 @ 75 Hz", "768x576 @ 85 Hz", "768x576 @ 100 Hz", "800x600
-      @ 56Hz", "800x600 @ 60Hz", "800x600 @ 72Hz", "800x600 @ 75Hz", "800x600 @ 85Hz",
-      "800x600 @ 100Hz", "1024x600 @ 60 Hz", "1024x768i @ 43Hz", "1024x768 @ 60Hz",
-      "1024x768 @ 70Hz", "1024x768 @ 75Hz", "1024x768 @ 85Hz", "1024x768 @ 100Hz",
-      "1024x768 @ 120Hz", "1152x864 @ 60Hz", "1152x864 @ 75Hz", "1152x864 @ 85Hz",
-      "1152x864 @ 100Hz", "1280x768 @ 60 Hz", "1280x800 @ 60 Hz", "1280x960 @ 60Hz",
-      "1280x960 @ 75Hz", "1280x960 @ 85Hz", "1280x960 @ 100Hz", "1280x1024 @ 60Hz",
-      "1280x1024 @ 75Hz", "1280x1024 @ 85Hz", "1280x1024 @ 100Hz", "1280x1024 @ 120Hz",
-      "1368x768 @ 60 Hz", "1400x1050 @ 60Hz", "1400x1050 @ 72 Hz", "1400x1050 @ 75
-      Hz", "1400x1050 @ 85 Hz", "1400x1050 @ 100 Hz", "1440x900 @ 60 Hz", "1440x1050
-      @ 60 Hz", "1600x1000 @ 60Hz", "1600x1000 @ 75Hz", "1600x1000 @ 85Hz", "1600x1000
-      @ 100Hz", "1600x1024 @ 60Hz", "1600x1024 @ 75Hz", "1600x1024 @ 76Hz", "1600x1024
-      @ 85Hz", "1600x1200 @ 60Hz", "1600x1200 @ 65Hz", "1600x1200 @ 70Hz", "1600x1200
-      @ 75Hz", "1600x1200 @ 85Hz", "1600x1200 @ 100 Hz", "1680x1050 @ 60Hz  reduced
-      blanking ", "1680x1050 @ 60Hz  non-interlaced ", "1680x1050 @ 60 Hz", "1792x1344
-      @ 60Hz", "1792x1344 @ 75Hz", "1856x1392 @ 60Hz", "1856x1392 @ 75Hz", "1920x1080
-      @ 60Hz", "1920x1080 @ 75Hz", "1920x1200 @ 60Hz", "1920x1200 @ 75Hz", "1920x1440
-      @ 60Hz", "1920x1440 @ 75Hz", "1920x2400 @ 25Hz", "1920x2400 @ 30Hz", "2048x1536
-      @ 60Hz"]'
+    value: '32'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 164]
+    coordinate: [140, 465]
     rotation: 0
-    state: enabled
+    state: true
 - name: px_rate
   id: variable
   parameters:
@@ -413,48 +227,61 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 28]
+    coordinate: [324, 77]
     rotation: 0
     state: enabled
 - name: refresh_rate
-  id: variable
+  id: variable_qtgui_range
   parameters:
     comment: ''
-    value: refresh_rates[mode]
+    gui_hint: 3,0,1,1
+    label: Refresh Rate (Hz)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '240'
+    value: '60'
+    widget: counter
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 28]
-    rotation: 0
-    state: enabled
-- name: refresh_rates
-  id: variable
-  parameters:
-    comment: ''
-    value: '[85, 85, 60, 100, 72, 75, 85, 60, 72, 75, 85, 100, 56, 60, 72, 75, 85,
-      100, 60, 43, 60, 70, 75, 85, 100, 120, 60, 75, 85, 100, 60, 60, 60, 75, 85,
-      100,  60,  75,  85,  100,  120, 60,  60,  72,  75,  85,  100 , 60,  60,  60,  75,  85,  100,  60,  75,  76,  85,  60,  65,  70,  75,  85,  100
-      ,  60,  60,  60,  60,  75,  60,  75,  60,  75,  60,  75,  60,  75,  25,  30,  60]'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [416, 164]
+    coordinate: [448, 15]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: int(10e6)
+    value: int(40e6)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 92]
+    coordinate: [130, 336]
     rotation: 0
     state: enabled
+- name: FFT_crosscorrelation_0_0
+  id: FFT_crosscorrelation
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay_samples: int(interpolatedHsize*Vsize-offset)
+    fac_decimation: '10'
+    fft_size: fft_size*2
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sample_rate: int(40e6)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [377, 427]
+    rotation: 0
+    state: true
 - name: blocks_complex_to_mag_0
   id: blocks_complex_to_mag
   parameters:
@@ -468,7 +295,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 479]
+    coordinate: [1016, 215]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -487,9 +314,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [768, 475]
+    coordinate: [846, 211]
     rotation: 0
     state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /home/pablo/fing/proyecto/grabaciones/test20210515
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [263, 296]
+    rotation: 0
+    state: disabled
 - name: blocks_file_source_0
   id: blocks_file_source
   parameters:
@@ -497,7 +342,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/gnuradio/persistent/30M_tv_g50_v2.dat
+    file: /media/felipe/BAYCHIP/gr-tempest/grabacion_splitter_40M_1344_806_px_freq_64995840.dat
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -509,9 +354,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [22, 460]
+    coordinate: [125, 179]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_float_to_short_0_0
   id: blocks_float_to_short
   parameters:
@@ -520,32 +365,28 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    scale: inverted
+    scale: '1'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1151, 739]
+    coordinate: [819, 439]
     rotation: 180
     state: enabled
-- name: blocks_float_to_short_0_0_0
-  id: blocks_float_to_short
+- name: blocks_message_debug_0
+  id: blocks_message_debug
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    scale: inverted
-    vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 603]
-    rotation: 180
-    state: disabled
+    coordinate: [849, 282]
+    rotation: 0
+    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -562,9 +403,106 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 465]
+    coordinate: [370, 212]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: auto
+    label10: Signal 10
+    label2: cross
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: int(fft_size/2)
+    srate: int(50e6)
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [525, 545]
+    rotation: 0
+    state: enabled
 - name: tempest_fine_sampling_synchronization_0
   id: tempest_fine_sampling_synchronization
   parameters:
@@ -582,28 +520,30 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [503, 443]
+    coordinate: [553, 57]
     rotation: 0
-    state: enabled
-- name: tempest_framing_0
-  id: tempest_framing
+    state: disabled
+- name: tempest_frame_drop_0
+  id: tempest_frame_drop
   parameters:
-    Hdisplay: Hdisplay
     Htotal: interpolatedHsize
-    Vdisplay: Vdisplay
     Vtotal: Vsize
+    actual_samp_rate: samp_rate
     affinity: ''
     alias: ''
     comment: ''
+    correct_sampling: '1'
+    max_deviation: 10.0/interpolatedHsize
     maxoutbuf: '0'
     minoutbuf: '0'
+    update_proba: 1e-2/(Hsize*Vsize)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1072, 579]
-    rotation: 180
-    state: disabled
+    coordinate: [552, 275]
+    rotation: 0
+    state: true
 - name: tempest_normalize_flow_0
   id: tempest_normalize_flow
   parameters:
@@ -621,8 +561,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1208, 441]
-    rotation: 0
+    coordinate: [1016, 407]
+    rotation: 180
     state: enabled
 - name: uhd_usrp_source_0
   id: uhd_usrp_source
@@ -661,7 +601,7 @@ blocks:
     ant7: ''
     ant8: ''
     ant9: ''
-    bw0: '0'
+    bw0: 15e6
     bw1: '0'
     bw10: '0'
     bw11: '0'
@@ -769,7 +709,7 @@ blocks:
     dc_offs_enb9: '""'
     dev_addr: '""'
     dev_args: '""'
-    gain0: '50'
+    gain0: '40'
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -978,7 +918,7 @@ blocks:
     show_lo_controls: 'False'
     stream_args: ''
     stream_chans: '[]'
-    sync: sync
+    sync: none
     time_source0: ''
     time_source1: ''
     time_source2: ''
@@ -992,29 +932,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [148, 607]
+    coordinate: [26, 216]
     rotation: 0
-    state: enabled
-- name: video_sdl_sink_0_0
-  id: video_sdl_sink
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: "Enable this path when you are not sure what the \nresolution is and\
-      \ you want to try several ones \non run-time. Then, enable the other path."
-    display_height: Vdisplay
-    display_width: Hdisplay
-    fps: '0'
-    height: Vdisplay
-    num_channels: '1'
-    type: short
-    width: Hdisplay
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [591, 571]
-    rotation: 180
     state: disabled
 - name: video_sdl_sink_0_0_0
   id: video_sdl_sink
@@ -1034,21 +953,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [912, 707]
+    coordinate: [602, 407]
     rotation: 180
     state: enabled
 
 connections:
+- [FFT_crosscorrelation_0_0, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_complex_to_mag_0, '0', tempest_normalize_flow_0, '0']
 - [blocks_delay_0, '0', blocks_complex_to_mag_0, '0']
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_float_to_short_0_0, '0', video_sdl_sink_0_0_0, '0']
-- [blocks_float_to_short_0_0_0, '0', video_sdl_sink_0_0, '0']
-- [blocks_throttle_0, '0', tempest_fine_sampling_synchronization_0, '0']
+- [blocks_throttle_0, '0', FFT_crosscorrelation_0_0, '0']
+- [blocks_throttle_0, '0', FFT_crosscorrelation_0_0, '1']
+- [blocks_throttle_0, '0', tempest_frame_drop_0, '0']
 - [tempest_fine_sampling_synchronization_0, '0', blocks_delay_0, '0']
-- [tempest_framing_0, '0', blocks_float_to_short_0_0_0, '0']
+- [tempest_frame_drop_0, '0', blocks_delay_0, '0']
+- [tempest_frame_drop_0, '0', tempest_fine_sampling_synchronization_0, '0']
+- [tempest_frame_drop_0, ratio, blocks_message_debug_0, print]
+- [tempest_frame_drop_0, ratio, tempest_fine_sampling_synchronization_0, ratio]
 - [tempest_normalize_flow_0, '0', blocks_float_to_short_0_0, '0']
-- [tempest_normalize_flow_0, '0', tempest_framing_0, '0']
+- [uhd_usrp_source_0, '0', blocks_file_sink_0, '0']
 - [uhd_usrp_source_0, '0', tempest_fine_sampling_synchronization_0, '0']
 
 metadata:

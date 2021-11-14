@@ -21,6 +21,9 @@ inputs:
 - label: in
   domain: stream
   dtype: complex
+- label: en
+  domain: message
+  optional: true
 outputs:
 - label: out
   domain: stream

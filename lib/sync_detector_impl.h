@@ -89,10 +89,15 @@ namespace gr {
       int d_frame_wait_for_blanking;
       int d_frame_output;
 
+
       //Counters
       int d_frame_height_counter; 
       int d_blanking_wait_counter; 
-      int d_output_counter;      
+      int d_output_counter;
+
+      // Control flag, and its mutex
+      gr::thread::mutex d_mutex;
+      bool d_start_sync_detect;   
 
       //Arrays
       float * d_data_h;
@@ -165,6 +170,14 @@ namespace gr {
         */
       float calculate_gauss_coeff(float N, float i);
       //---------------------------------------------------------
+      //---------------------------------------------------------
+      /*!
+        * \brief Message handler for starting or stopping 
+        * this block.
+        *  
+        * \param pmt::pmt_t msg data received.
+        */
+      void set_ena_msg(pmt::pmt_t msg);
 
       /**********************************************************
        * Public function prototypes
