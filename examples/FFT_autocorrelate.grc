@@ -89,8 +89,8 @@ blocks:
     coordinate: [634, 76]
     rotation: 0
     state: true
-- name: blocks_complex_to_mag_0_0
-  id: blocks_complex_to_mag
+- name: blocks_complex_to_real_0
+  id: blocks_complex_to_real
   parameters:
     affinity: ''
     alias: ''
@@ -102,7 +102,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [627, 233]
+    coordinate: [630, 225]
     rotation: 0
     state: true
 - name: blocks_nlog10_ff_1
@@ -333,13 +333,13 @@ blocks:
 
 connections:
 - [blocks_complex_to_mag_0, '0', fft_vxx_1, '0']
-- [blocks_complex_to_mag_0_0, '0', single_pole_iir_filter_xx_0, '0']
+- [blocks_complex_to_real_0, '0', single_pole_iir_filter_xx_0, '0']
 - [blocks_nlog10_ff_1, '0', blocks_vector_to_stream_0, '0']
 - [blocks_selector_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_vector_to_stream_0, '0', pad_sink_0, '0']
 - [fft_vxx_0, '0', blocks_complex_to_mag_0, '0']
-- [fft_vxx_1, '0', blocks_complex_to_mag_0_0, '0']
+- [fft_vxx_1, '0', blocks_complex_to_real_0, '0']
 - [pad_source_0, '0', blocks_selector_0, '0']
 - [pad_source_0_0, out, blocks_selector_0, en]
 - [single_pole_iir_filter_xx_0, '0', blocks_nlog10_ff_1, '0']
